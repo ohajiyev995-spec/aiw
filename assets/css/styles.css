@@ -776,21 +776,23 @@ body[data-page="wizards"].spoiler-hidden .card__summary::after {
 
 .card__details {
   padding: 1.25rem 1.75rem 1.75rem;
-  display: grid;
+  display: none;
   gap: 1rem;
   overflow: hidden;
-  max-height: 0;
+  height: 0;
   opacity: 0;
   border-top: 1px solid rgba(138, 180, 248, 0.12);
-  transition: max-height var(--transition-medium), opacity var(--transition-medium);
+  transition: opacity var(--transition-medium), height var(--transition-medium);
 }
 
-.card__details[data-open="true"] {
+.card.is-open .card__details {
+  display: block;
+  height: auto;
   opacity: 1;
 }
 
-.card__details[hidden] {
-  display: none;
+.card__details:not([hidden]) {
+  display: block;
 }
 
 .card__notes {

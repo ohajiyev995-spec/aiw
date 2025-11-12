@@ -121,60 +121,60 @@
     }
   };
 
-  const animateOpen = (details) => {
-    details.hidden = false;
-    if (prefersReducedMotion()) {
+    const animateOpen = (details) => {
+      details.hidden = false;
+      if (prefersReducedMotion()) {
+        details.dataset.open = "true";
+        details.style.height = "";
+        details.style.opacity = "";
+        return;
+      }
+
       details.dataset.open = "true";
-      details.style.maxHeight = "";
-      details.style.opacity = "";
-      return;
-    }
-
-    details.dataset.open = "true";
-    details.style.maxHeight = "0px";
-    details.style.opacity = "0";
-    requestAnimationFrame(() => {
-      const height = details.scrollHeight;
-      details.style.maxHeight = `${height}px`;
-      details.style.opacity = "1";
-    });
-    const handle = (event) => {
-      if (event.propertyName && event.propertyName !== "max-height" && event.propertyName !== "maxHeight") {
-        return;
-      }
-      details.style.maxHeight = "";
-      details.style.opacity = "";
-      details.removeEventListener("transitionend", handle);
-    };
-    details.addEventListener("transitionend", handle);
-  };
-
-  const animateClose = (details) => {
-    if (prefersReducedMotion()) {
-      details.dataset.open = "false";
-      details.hidden = true;
-      return;
-    }
-
-    const height = details.scrollHeight;
-    details.style.maxHeight = `${height}px`;
-    details.style.opacity = "1";
-    requestAnimationFrame(() => {
-      details.dataset.open = "false";
-      details.style.maxHeight = "0px";
+      details.style.height = "0px";
       details.style.opacity = "0";
-    });
-    const handle = (event) => {
-      if (event.propertyName && event.propertyName !== "max-height" && event.propertyName !== "maxHeight") {
+      requestAnimationFrame(() => {
+        const height = details.scrollHeight;
+        details.style.height = `${height}px`;
+        details.style.opacity = "1";
+      });
+      const handle = (event) => {
+        if (event.propertyName && event.propertyName !== "height") {
+          return;
+        }
+        details.style.height = "";
+        details.style.opacity = "";
+        details.removeEventListener("transitionend", handle);
+      };
+      details.addEventListener("transitionend", handle);
+    };
+
+    const animateClose = (details) => {
+      if (prefersReducedMotion()) {
+        details.dataset.open = "false";
+        details.hidden = true;
         return;
       }
-      details.hidden = true;
-      details.style.maxHeight = "";
-      details.style.opacity = "";
-      details.removeEventListener("transitionend", handle);
+
+      const height = details.scrollHeight;
+      details.style.height = `${height}px`;
+      details.style.opacity = "1";
+      requestAnimationFrame(() => {
+        details.dataset.open = "false";
+        details.style.height = "0px";
+        details.style.opacity = "0";
+      });
+      const handle = (event) => {
+        if (event.propertyName && event.propertyName !== "height") {
+          return;
+        }
+        details.hidden = true;
+        details.style.height = "";
+        details.style.opacity = "";
+        details.removeEventListener("transitionend", handle);
+      };
+      details.addEventListener("transitionend", handle);
     };
-    details.addEventListener("transitionend", handle);
-  };
 
     const resetCardState = (card) => {
       if (!card) return;
@@ -313,11 +313,7 @@
       if (action === "details") {
         event.preventDefault();
         prepareCard(card);
-        if (card.classList.contains("is-open")) {
-          closeCard(card, { focusButton: false });
-        } else {
-          openCard(card, { focusDetails: true });
-        }
+        openCard(card, { focusDetails: true });
       } else if (action === "hide") {
         event.preventDefault();
         closeCard(card, { focusButton: true });

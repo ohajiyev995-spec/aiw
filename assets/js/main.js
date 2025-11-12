@@ -307,7 +307,8 @@
     if (state.explicit) return;
     window.clearTimeout(timers.close);
     timers.close = window.setTimeout(() => {
-      if (!getState(card).explicit) {
+      const latestState = getState(card);
+      if (!latestState.explicit) {
         closeCard(card, { source: "hover" });
       }
     }, 240);

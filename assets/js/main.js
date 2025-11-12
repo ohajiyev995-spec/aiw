@@ -202,32 +202,25 @@
       const showButton = getDetailsButton(card);
       const hideButton = getHideButton(card);
       const details = getDetailsRegion(card);
-      if (!showButton || !details) return;
+      if (!showButton || !hideButton || !details) return;
 
       if (!details.id) {
         details.id = generateDetailsId();
       }
-      showButton.dataset.action = "details";
-      showButton.classList.add("show-btn");
-      showButton.setAttribute("type", "button");
-      showButton.setAttribute("aria-controls", details.id);
-      if (!showButton.id) {
-        showButton.id = `${details.id}-toggle`;
-      }
-      if (!showButton.hasAttribute("aria-expanded")) {
-        showButton.setAttribute("aria-expanded", "false");
-      }
 
-      if (hideButton) {
-        hideButton.dataset.action = "hide";
-        hideButton.classList.add("hide-btn");
-        hideButton.setAttribute("type", "button");
-        hideButton.setAttribute("aria-controls", details.id);
-        if (!hideButton.id) {
-          hideButton.id = `${details.id}-hide`;
+      [showButton, hideButton].forEach((button) => {
+        button.setAttribute("type", "button");
+        button.setAttribute("aria-controls", details.id);
+        if (!button.id) {
+          button.id = `${details.id}-${button.dataset.action}`;
         }
-        hideButton.setAttribute("aria-expanded", "false");
-      }
+      });
+
+      showButton.classList.add("show-btn");
+      hideButton.classList.add("hide-btn");
+
+      showButton.setAttribute("aria-expanded", "false");
+      hideButton.setAttribute("aria-expanded", "false");
 
       details.setAttribute("role", "region");
       details.setAttribute("aria-labelledby", showButton.id);

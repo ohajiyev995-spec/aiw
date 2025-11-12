@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Meet the witches and wizards who defined Hogwarts lore, with filters and spoiler controls."
+    />
+    <title>Hogwarts Wizards</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Inter:wght@400;500;600;700&display=swap"
+      onload="this.rel='stylesheet'"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Inter:wght@400;500;600;700&display=swap"
+      />
+    </noscript>
+    <link rel="stylesheet" href="assets/css/styles.min.css" />
+  </head>
+  <body data-page="wizards">
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <div class="container nav-container">
+        <a class="brand" href="index.html">Hogwarts: Houses &amp; Wizards</a>
+        <button
+          class="nav-toggle"
+          type="button"
+          aria-controls="primary-navigation"
+          aria-expanded="false"
+        >
+          <span class="sr-only">Toggle navigation</span>
+          <span aria-hidden="true" class="nav-toggle-bar"></span>
+          <span aria-hidden="true" class="nav-toggle-bar"></span>
+          <span aria-hidden="true" class="nav-toggle-bar"></span>
+        </button>
+        <nav class="primary-nav" id="primary-navigation">
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="houses.html">Houses</a></li>
+            <li>
+              <a href="wizards.html" class="is-active" aria-current="page"
+                >Wizards</a
+              >
+            </li>
+            <li><a href="timeline.html">Timeline</a></li>
+            <li><a href="about.html">About</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+    <main id="main" class="page">
+      <div class="spoiler-banner" id="spoiler-banner" role="status">
+        <div class="container spoiler-banner-content">
+          <p>This site may contain major plot spoilers.</p>
+          <button
+            type="button"
+            class="banner-dismiss"
+            data-banner-dismiss
+            aria-label="Dismiss spoiler notice"
+          >
+            Dismiss
+          </button>
+        </div>
+      </div>
+      <section class="page-header">
+        <div class="container">
+          <p class="eyebrow">Character Compendium</p>
+          <h1>Legendary Witches &amp; Wizards</h1>
+          <p class="page-subtitle">
+            Filter by house, school year, or name—and control spoiler content to
+            explore at your own pace.
+          </p>
+        </div>
+      </section>
+      <section class="filters" aria-labelledby="wizard-filters-heading">
+        <div class="container">
+          <div class="filters-header">
+            <h2 id="wizard-filters-heading">Refine your search</h2>
+            <p>
+              Use the spoiler toggle to hide sensitive story details until
+              you&rsquo;re ready.
+            </p>
+          </div>
+          <form class="filter-form wizard-form" id="wizard-filters">
+            <label class="filter-field" for="wizard-search">
+              <span class="form-label">Search by name</span>
+              <input
+                type="search"
+                id="wizard-search"
+                name="wizard-search"
+                placeholder="Search for a witch or wizard..."
+                autocomplete="off"
+              />
+            </label>
+            <label class="filter-field" for="wizard-house-filter">
+              <span class="form-label">Filter by house</span>
+              <select id="wizard-house-filter" name="wizard-house-filter">
+                <option value="">All houses</option>
+              </select>
+            </label>
+            <label class="filter-field" for="wizard-year-filter">
+              <span class="form-label">Filter by year</span>
+              <select id="wizard-year-filter" name="wizard-year-filter">
+                <option value="">All years</option>
+              </select>
+            </label>
+            <div class="filter-field toggle-field">
+              <span class="form-label">Spoilers</span>
+              <button
+                type="button"
+                id="spoiler-toggle"
+                class="toggle-button"
+                aria-pressed="false"
+              >
+                Spoilers Off
+              </button>
+            </div>
+          </form>
+        </div>
+      </section>
+      <section class="cards-section" aria-labelledby="wizards-grid-heading">
+        <div class="container">
+          <h2 id="wizards-grid-heading" class="sr-only">
+            Hogwarts wizards list
+          </h2>
+          <div class="cards-grid" id="wizards-grid" role="list"></div>
+          <p class="empty-state" id="wizards-empty-state" hidden>
+            No wizards match your filters. Adjust your search terms or filters to
+            see more results.
+          </p>
+        </div>
+      </section>
+    </main>
+    <footer class="site-footer">
+      <div class="container footer-content">
+        <div>
+          <p class="footer-brand">Hogwarts: Houses &amp; Wizards</p>
+          <p class="footer-copy">
+            Fan site for educational purposes. All rights belong to their
+            respective owners.
+          </p>
+        </div>
+        <div class="footer-social">
+          <p class="footer-heading">Connect</p>
+          <ul>
+            <li>
+              <a
+                href="https://www.linkedin.com/in/your-username/"
+                target="_blank"
+                rel="noopener"
+                >LinkedIn</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://github.com/your-username"
+                target="_blank"
+                rel="noopener"
+                >GitHub</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://www.instagram.com/your-username/"
+                target="_blank"
+                rel="noopener"
+                >Instagram</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+      <p class="footer-note">Built using AI prompts only — no manual edits.</p>
+    </footer>
+    <script src="assets/js/data.min.js" defer></script>
+    <script src="assets/js/main.min.js" defer></script>
+  </body>
+</html>

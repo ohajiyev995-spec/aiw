@@ -29,9 +29,9 @@
             "The sword of Gryffindor manifested to aid young heroes when true bravery was shown beneath Hogwarts.",
         },
       ],
-      summary:
-        "Gryffindor champions daring acts and moral courage, urging students to protect others even when the cost is high. Alumni often lead from the front, inspiring communities with bold compassion and a refusal to accept tyranny or injustice.",
-      img: "assets/img/house-gryffindor.webp",
+        summary:
+          "Gryffindor champions daring acts and moral courage, urging students to protect others even when the cost is high. Alumni often lead from the front, inspiring communities with bold compassion and a refusal to accept tyranny or injustice.",
+        img: "https://img.icons8.com/color/512/gryffindor.png",
       alt: "Gryffindor House Crest",
     }),
     createHouse({
@@ -58,9 +58,9 @@
             "Students and alumni collaborated to reject pure-blood supremacy, demonstrating that ambition can advance justice as boldly as it pursues power.",
         },
       ],
-      summary:
-        "Slytherin prizes sharp minds and strategic ambition, teaching that influence can be wielded responsibly when guided by conviction. The house nurtures visionaries who adapt quickly, leverage opportunity, and lead transformative movements within the wizarding world.",
-      img: "assets/img/house-slytherin.webp",
+        summary:
+          "Slytherin prizes sharp minds and strategic ambition, teaching that influence can be wielded responsibly when guided by conviction. The house nurtures visionaries who adapt quickly, leverage opportunity, and lead transformative movements within the wizarding world.",
+        img: "https://img.icons8.com/color/512/slytherin.png",
       alt: "Slytherin House Crest",
     }),
     createHouse({
@@ -87,9 +87,9 @@
             "The legendary diadem resurfaced briefly, reminding scholars of the responsibility that accompanies the pursuit of boundless knowledge.",
         },
       ],
-      summary:
-        "Ravenclaw elevates inquisitive spirits and original thinkers who see patterns others miss. Its students relish puzzles, prize wit, and delight in sharing knowledge that sparks innovation across magical disciplines and everyday life alike.",
-      img: "assets/img/house-ravenclaw.webp",
+        summary:
+          "Ravenclaw elevates inquisitive spirits and original thinkers who see patterns others miss. Its students relish puzzles, prize wit, and delight in sharing knowledge that sparks innovation across magical disciplines and everyday life alike.",
+        img: "https://img.icons8.com/color/512/ravenclaw.png",
       alt: "Ravenclaw House Crest",
     }),
     createHouse({
@@ -116,9 +116,9 @@
             "Hufflepuff students stood steadfast in the castle defense, exemplifying the house's legendary perseverance and inclusive bravery.",
         },
       ],
-      summary:
-        "Hufflepuff celebrates steadfast hearts who value cooperation over glory. Members cultivate inclusive communities, working diligently behind the scenes to lift others up while defending fairness with unshakeable resolve and kindness.",
-      img: "assets/img/house-hufflepuff.webp",
+        summary:
+          "Hufflepuff celebrates steadfast hearts who value cooperation over glory. Members cultivate inclusive communities, working diligently behind the scenes to lift others up while defending fairness with unshakeable resolve and kindness.",
+        img: "https://img.icons8.com/color/512/hufflepuff.png",
       alt: "Hufflepuff House Crest",
     }),
   ]);
@@ -151,8 +151,8 @@
           description:
             "Sacrificed himself and later defeated Voldemort, ending the Second Wizarding War.",
         },
-      ],
-      img: "assets/img/harry-potter.webp",
+        ],
+        img: "https://hp-api.onrender.com/images/harry.jpg",
       alt: "Harry Potter",
       spoilerLevel: "high",
     }),
@@ -183,8 +183,8 @@
           description:
             "After the war, spearheaded legislation for house-elf rights and educational reform.",
         },
-      ],
-      img: "assets/img/hermione-granger.webp",
+        ],
+        img: "https://hp-api.onrender.com/images/hermione.jpeg",
       alt: "Hermione Granger",
       spoilerLevel: "low",
     }),
@@ -215,8 +215,8 @@
           description:
             "Coordinated reinforcements during the Battle of Hogwarts.",
         },
-      ],
-      img: "assets/img/ron-weasley.webp",
+        ],
+        img: "https://hp-api.onrender.com/images/ron.jpg",
       alt: "Ron Weasley",
       spoilerLevel: "high",
     }),
@@ -247,8 +247,8 @@
           description:
             "Arranged his own death to protect Draco Malfoy and secure Snape's cover.",
         },
-      ],
-      img: "assets/img/albus-dumbledore.webp",
+        ],
+        img: "https://img.icons8.com/color/512/albus-dumbledore.png",
       alt: "Professor Albus Dumbledore",
       spoilerLevel: "high",
     }),
@@ -279,8 +279,8 @@
           description:
             "Became Hogwarts headmaster while secretly sabotaging Death Eater control.",
         },
-      ],
-      img: "assets/img/severus-snape.webp",
+        ],
+        img: "https://hp-api.onrender.com/images/snape.jpg",
       alt: "Professor Severus Snape",
       spoilerLevel: "high",
     }),
@@ -305,8 +305,8 @@
           description:
             "Enchanted the castle to defend itself during the final battle.",
         },
-      ],
-      img: "assets/img/minerva-mcgonagall.webp",
+        ],
+        img: "https://ik.imagekit.io/hpapi/mcgonagall.jpg",
       alt: "Professor Minerva McGonagall",
       spoilerLevel: "low",
     }),
@@ -337,8 +337,8 @@
           description:
             "Rescued students and creatures during the final battle.",
         },
-      ],
-      img: "assets/img/wizard-rubeus-hagrid.webp",
+        ],
+        img: "https://hp-api.onrender.com/images/hagrid.png",
       alt: "Professor Rubeus Hagrid",
       spoilerLevel: "low",
     }),
@@ -369,8 +369,8 @@
           description:
             "Rescued by Harry from Fiendfyre, beginning a shift in allegiances.",
         },
-      ],
-      img: "assets/img/draco-malfoy.webp",
+        ],
+        img: "https://hp-api.onrender.com/images/draco.jpg",
       alt: "Draco Malfoy",
       spoilerLevel: "high",
     }),
@@ -401,8 +401,8 @@
           description:
             "Helped Harry gain access to Hogwarts by rallying support at the Hog's Head.",
         },
-      ],
-      img: "assets/img/luna-lovegood.webp",
+        ],
+        img: "https://hp-api.onrender.com/images/luna.jpg",
       alt: "Luna Lovegood",
       spoilerLevel: "low",
     }),
@@ -433,8 +433,8 @@
           description:
             "Destroyed the final Horcrux with the Sword of Gryffindor.",
         },
-      ],
-      img: "assets/img/neville-longbottom.webp",
+        ],
+        img: "https://hp-api.onrender.com/images/neville.jpg",
       alt: "Neville Longbottom",
       spoilerLevel: "high",
     }),

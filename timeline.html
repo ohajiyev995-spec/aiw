@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Follow a timeline of defining Hogwarts house milestones and wizarding world events drawn from our curated data sets."
+    />
+    <title>Chronicles Timeline | Hogwarts: Houses & Wizards</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" type="image/webp" href="assets/img/favicon.webp" />
+    <link rel="stylesheet" href="assets/css/styles.min.css" />
+  </head>
+  <body class="page-timeline">
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <div class="container site-header__inner">
+        <a class="brand" href="index.html">
+          <img
+            class="brand__sparkle"
+            src="assets/img/sparkle.svg"
+            alt=""
+            width="24"
+            height="24"
+            loading="lazy"
+          />
+          Hogwarts: Houses & Wizards
+        </a>
+        <button
+          class="nav-toggle"
+          type="button"
+          aria-controls="primary-navigation"
+          aria-expanded="false"
+          data-nav-toggle
+        >
+          <span class="visually-hidden">Toggle navigation</span>
+          ☰
+        </button>
+        <nav class="site-navigation" aria-label="Primary">
+          <ul class="site-nav" id="primary-navigation" data-nav-menu>
+            <li>
+              <a href="index.html">Home</a>
+            </li>
+            <li>
+              <a href="houses.html">Houses</a>
+            </li>
+            <li>
+              <a href="wizards.html">Wizards</a>
+            </li>
+            <li>
+              <a href="timeline.html" aria-current="page">Timeline</a>
+            </li>
+            <li>
+              <a href="about.html">About</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+    <main id="main" class="site-main">
+      <section class="section">
+        <div class="container section__header">
+          <h1>Chronicles of Hogwarts</h1>
+          <p>
+            Track pivotal events from Hogwarts' founding to the Battle of Hogwarts. Each entry draws directly from the houses and wizards featured across this experience.
+          </p>
+        </div>
+        <div class="container">
+          <div class="timeline" data-timeline aria-live="polite">
+            <p>Loading chronological events…</p>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer class="site-footer">
+      <div class="container site-footer__inner">
+        <ul class="footer__social">
+          <li>
+            <a
+              href="https://www.linkedin.com/in/your-username/"
+              target="_blank"
+              rel="noopener"
+            >
+              LinkedIn
+            </a>
+          </li>
+          <li>
+            <a
+              href="https://github.com/your-username"
+              target="_blank"
+              rel="noopener"
+            >
+              GitHub
+            </a>
+          </li>
+          <li>
+            <a
+              href="https://www.instagram.com/your-username/"
+              target="_blank"
+              rel="noopener"
+            >
+              Instagram
+            </a>
+          </li>
+        </ul>
+        <p class="footer__disclaimer">
+          Fan site for educational purposes. All rights belong to their respective owners.
+        </p>
+      </div>
+    </footer>
+    <script defer src="assets/js/data.min.js"></script>
+    <script defer src="assets/js/main.min.js"></script>
+  </body>
+</html>

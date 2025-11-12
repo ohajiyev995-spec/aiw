@@ -564,13 +564,13 @@ h4 {
   border: 1px dashed rgba(138, 180, 248, 0.3);
 }
 
-.spoiler-hidden .card[data-spoiler="high"] .card__summary {
+.page-wizards.spoiler-hidden .card__summary {
   filter: blur(0.65rem);
   opacity: 0.2;
   position: relative;
 }
 
-.spoiler-hidden .card[data-spoiler="high"] .card__summary::after {
+.page-wizards.spoiler-hidden .card__summary::after {
   content: "Spoiler hidden — toggle to view";
   position: absolute;
   inset: 0.5rem;

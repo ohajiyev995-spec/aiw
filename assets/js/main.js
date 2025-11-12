@@ -11,6 +11,8 @@
 
   const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
 
+  const SPOILER_STORAGE_KEY = "wizardSpoilersVisible";
+
   const closeMobileNav = () => {
     body.classList.remove("nav-open");
     const navToggle = $("[data-nav-toggle]");
@@ -323,16 +325,28 @@
       grid.setAttribute("aria-busy", "false");
     };
 
-    const updateSpoilerState = () => {
+    const readStoredSpoilerPreference = () => {
+      try {
+        return localStorage.getItem(SPOILER_STORAGE_KEY);
+      } catch (error) {
+        return null;
+      }
+    };
+
+    const writeStoredSpoilerPreference = (state) => {
+      try {
+        localStorage.setItem(SPOILER_STORAGE_KEY, state);
+      } catch (error) {
+        // ignore write failures (e.g., storage disabled)
+      }
+    };
+
+    const updateSpoilerState = (persist = true) => {
       const hideSpoilers = !spoilerToggle.checked;
       body.classList.toggle("spoiler-hidden", hideSpoilers);
-      $$("[data-spoiler]", grid).forEach((card) => {
-        if (card.dataset.spoiler === "high") {
-          card.setAttribute("aria-live", hideSpoilers ? "polite" : "off");
-        } else {
-          card.removeAttribute("aria-live");
-        }
-      });
+      if (persist) {
+        writeStoredSpoilerPreference(hideSpoilers ? "hidden" : "visible");
+      }
     };
 
     searchInput.addEventListener("input", render);
@@ -347,7 +361,14 @@
     });
 
     render();
-    updateSpoilerState();
+
+    const storedPreference = readStoredSpoilerPreference();
+    if (storedPreference === "hidden") {
+      spoilerToggle.checked = false;
+    } else if (storedPreference === "visible") {
+      spoilerToggle.checked = true;
+    }
+    updateSpoilerState(false);
   };
 
   const buildTimelineEvents = () => {

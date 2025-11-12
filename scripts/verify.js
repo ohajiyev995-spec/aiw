@@ -69,38 +69,27 @@ const PAGES = [
 
   const spoilerResults = await page.evaluate(() => {
     const toggle = document.querySelector("[data-spoiler-toggle]");
-    const highSummaries = Array.from(
-      document.querySelectorAll('[data-spoiler="high"] .card__summary')
+    const summaries = Array.from(
+      document.querySelectorAll("[data-wizards-grid] .card__summary")
     );
-    const lowSummaries = Array.from(
-      document.querySelectorAll('[data-spoiler="low"] .card__summary')
-    );
-    const highImages = Array.from(
-      document.querySelectorAll('[data-spoiler="high"] .card__media img')
+    const images = Array.from(
+      document.querySelectorAll("[data-wizards-grid] .card__media img")
     );
 
     const getFilters = (nodes) =>
       nodes.map((node) => window.getComputedStyle(node).getPropertyValue("filter"));
 
-    const initialHighFilters = getFilters(highSummaries);
-    const initialLowFilters = getFilters(lowSummaries);
+    const initialSummaryFilters = getFilters(summaries);
 
     if (toggle) toggle.click();
 
-    const afterToggleHighFilters = getFilters(highSummaries);
-    const afterToggleLowFilters = getFilters(lowSummaries);
-    const afterToggleHighOpacities = highSummaries.map((node) =>
-      window.getComputedStyle(node).getPropertyValue("opacity")
-    );
-    const afterToggleHighImages = getFilters(highImages);
+    const afterToggleSummaryFilters = getFilters(summaries);
+    const afterToggleImageFilters = getFilters(images);
 
     return {
-      initialHighFilters,
-      initialLowFilters,
-      afterToggleHighFilters,
-      afterToggleLowFilters,
-      afterToggleHighOpacities,
-      afterToggleHighImages,
+      initialSummaryFilters,
+      afterToggleSummaryFilters,
+      afterToggleImageFilters,
     };
   });
 
@@ -119,33 +108,16 @@ const PAGES = [
   }
 
   const spoilerIssues = [];
-  if (
-    spoilerResults.initialHighFilters.some((filter) => filter !== "none") ||
-    spoilerResults.initialLowFilters.some((filter) => filter !== "none")
-  ) {
+  if (spoilerResults.initialSummaryFilters.some((filter) => filter !== "none")) {
     spoilerIssues.push("Spoiler toggle ON state is not clean.");
   }
   if (
-    !spoilerResults.afterToggleHighFilters.every((filter) =>
-      /blur/i.test(filter)
-    )
+    !spoilerResults.afterToggleSummaryFilters.every((filter) => /blur/i.test(filter))
   ) {
-    spoilerIssues.push("High-spoiler summaries are not blurred when toggle OFF.");
+    spoilerIssues.push("Summaries are not fully blurred when toggle OFF.");
   }
-  if (
-    spoilerResults.afterToggleLowFilters.some((filter) => /blur/i.test(filter))
-  ) {
-    spoilerIssues.push("Low-spoiler summaries are blurred when toggle OFF.");
-  }
-  if (
-    spoilerResults.afterToggleHighImages.some((filter) => /blur/i.test(filter))
-  ) {
+  if (spoilerResults.afterToggleImageFilters.some((filter) => /blur/i.test(filter))) {
     spoilerIssues.push("Wizard images are blurred when toggle OFF.");
-  }
-  if (
-    spoilerResults.afterToggleHighOpacities.some((opacity) => parseFloat(opacity) < 0.5)
-  ) {
-    spoilerIssues.push("High-spoiler summaries opacity is unexpectedly low when toggle OFF.");
   }
 
   const hasIssues =

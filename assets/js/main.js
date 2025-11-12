@@ -306,6 +306,7 @@
     window.clearTimeout(timers.open);
     timers.open = null;
     if (state.explicit) return;
+    if (!state.hoverOpen && !card.classList.contains("is-open")) return;
     window.clearTimeout(timers.close);
     timers.close = window.setTimeout(() => {
       const latestState = getState(card);

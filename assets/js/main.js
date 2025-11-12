@@ -99,6 +99,7 @@
     const isPointerFine = () => pointerFineQuery.matches;
     const prefersReducedMotion = () => prefersReducedMotionQuery.matches;
     let desktopOpenCard = null;
+  const hoverRoots = new Set();
 
   const focusableSelectors =
     'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
@@ -323,6 +324,7 @@
         closeCard(previous, { source: "hover" });
       }
     }
+    refreshHoverDelegation();
   });
 
   const handleToggleClick = (event) => {
@@ -406,24 +408,54 @@
     card.addEventListener("focusout", handleFocusOut);
   };
 
-  const ensureDelegatedHover = (root) => {
-    if (!root || root.dataset.cardDelegation === "true") return;
-
+  const attachHoverDelegation = (root) => {
+    if (!root || root._cardHoverHandlers) return;
     const onPointerEnter = (event) => {
       const card = event.target.closest(".card");
       if (!card || !root.contains(card)) return;
       handlePointerEnter(card, event);
     };
-
     const onPointerLeave = (event) => {
       const card = event.target.closest(".card");
       if (!card || !root.contains(card)) return;
       handlePointerLeave(card, event);
     };
-
     root.addEventListener("pointerenter", onPointerEnter, true);
     root.addEventListener("pointerleave", onPointerLeave, true);
-    root.dataset.cardDelegation = "true";
+    root._cardHoverHandlers = { onPointerEnter, onPointerLeave };
+  };
+
+  const detachHoverDelegation = (root) => {
+    if (!root || !root._cardHoverHandlers) return;
+    const { onPointerEnter, onPointerLeave } = root._cardHoverHandlers;
+    root.removeEventListener("pointerenter", onPointerEnter, true);
+    root.removeEventListener("pointerleave", onPointerLeave, true);
+    root._cardHoverHandlers = null;
+  };
+
+  const refreshHoverDelegation = () => {
+    hoverRoots.forEach((root) => {
+      if (!root || !root.isConnected) {
+        detachHoverDelegation(root);
+        hoverRoots.delete(root);
+        return;
+      }
+      if (isPointerFine()) {
+        attachHoverDelegation(root);
+      } else {
+        detachHoverDelegation(root);
+      }
+    });
+  };
+
+  const ensureDelegatedHover = (root) => {
+    if (!root) return;
+    hoverRoots.add(root);
+    if (isPointerFine()) {
+      attachHoverDelegation(root);
+    } else {
+      detachHoverDelegation(root);
+    }
   };
 
   const initializeCards = (root) => {

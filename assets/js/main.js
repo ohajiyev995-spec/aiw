@@ -439,57 +439,57 @@
     const article = document.createElement("article");
     article.className = "card card--house";
     const detailsId = `card-details-${house.id}`;
-    article.innerHTML = `
-      <figure class="card__media">
-        <img src="${house.img}" alt="${house.name} house crest" loading="lazy" width="320" height="320" />
-        <span class="card__label" aria-hidden="true">House</span>
-      </figure>
-      <div class="card__body">
-        <div class="card__heading">
-          <h2 class="card__title">${house.name}</h2>
-        </div>
-        <p class="card__summary">${house.summary}</p>
-        <div class="card__footer">
-          <button
-            class="card__toggle"
-            type="button"
-            aria-expanded="false"
-            aria-controls="${detailsId}"
-            data-card-toggle
-          >
-            Details <span class="card__toggle-icon" aria-hidden="true">▾</span>
-          </button>
-        </div>
-        <div class="card__details" id="${detailsId}" data-card-details hidden>
-          <dl class="card__meta card__meta--inline">
-            <div>
-              <dt>Founder</dt>
-              <dd>${house.founder}</dd>
-            </div>
-            <div>
-              <dt>Mascot</dt>
-              <dd>${house.mascot}</dd>
-            </div>
-            <div>
-              <dt>Relic</dt>
-              <dd>${house.relic}</dd>
-            </div>
-            <div>
-              <dt>Ghost</dt>
-              <dd>${house.ghost}</dd>
-            </div>
-          </dl>
-          <ul class="card__tags" aria-label="Traits">
-            ${house.traits
-              .map(
-                (trait) =>
-                  `<li><span class="badge" data-badge="${trait.toLowerCase()}">${trait}</span></li>`
-              )
-              .join("")}
-          </ul>
-        </div>
+  article.innerHTML = `
+    <figure class="card__media">
+      <img src="${house.img}" alt="${house.name} house crest" loading="lazy" width="320" height="320" />
+      <span class="card__label" aria-hidden="true">House</span>
+    </figure>
+    <div class="card__body">
+      <div class="card__heading">
+        <h2 class="card__title">${house.name}</h2>
       </div>
-    `;
+      <p class="card__summary">${house.summary}</p>
+      <div class="card__footer">
+        <button
+          class="card__toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="${detailsId}"
+          data-card-toggle
+        >
+          Details <span class="card__toggle-icon" aria-hidden="true">▾</span>
+        </button>
+      </div>
+    </div>
+    <div class="card__details" id="${detailsId}" data-card-details hidden>
+      <dl class="card__meta card__meta--inline">
+        <div>
+          <dt>Founder</dt>
+          <dd>${house.founder}</dd>
+        </div>
+        <div>
+          <dt>Mascot</dt>
+          <dd>${house.mascot}</dd>
+        </div>
+        <div>
+          <dt>Relic</dt>
+          <dd>${house.relic}</dd>
+        </div>
+        <div>
+          <dt>Ghost</dt>
+          <dd>${house.ghost}</dd>
+        </div>
+      </dl>
+      <ul class="card__tags" aria-label="Traits">
+        ${house.traits
+          .map(
+            (trait) =>
+              `<li><span class="badge" data-badge="${trait.toLowerCase()}">${trait}</span></li>`
+          )
+          .join("")}
+      </ul>
+    </div>
+  `;
     return article;
   };
 
@@ -520,43 +520,43 @@
               .join("")}
           </ul>`
         : "";
-    article.innerHTML = `
-      <figure class="card__media">
-        <img src="${wizard.img}" alt="${wizard.name} portrait" loading="lazy" width="320" height="440" />
-        <figcaption class="visually-hidden">${wizard.name}</figcaption>
-      </figure>
-      <div class="card__body">
-        <div class="card__heading">
-          <h2 class="card__title">${wizard.name}</h2>
-          <span class="badge badge--outline" data-house="${wizard.house}">${house.name}</span>
-        </div>
-        <p class="card__summary">${wizard.summary}</p>
-        <div class="card__footer">
-          <button
-            class="card__toggle"
-            type="button"
-            aria-expanded="false"
-            aria-controls="${detailsId}"
-            data-card-toggle
-          >
-            Details <span class="card__toggle-icon" aria-hidden="true">▾</span>
-          </button>
-        </div>
-        <div class="card__details" id="${detailsId}" data-card-details hidden>
-          <dl class="card__meta card__meta--inline">
-            <div>
-              <dt>Aliases</dt>
-              <dd>${wizard.aliases.join(", ")}</dd>
-            </div>
-            <div>
-              <dt>Years at Hogwarts</dt>
-              <dd>${yearsLabel}</dd>
-            </div>
-          </dl>
-          ${eventsMarkup}
-        </div>
+  article.innerHTML = `
+    <figure class="card__media">
+      <img src="${wizard.img}" alt="${wizard.name} portrait" loading="lazy" width="320" height="440" />
+      <figcaption class="visually-hidden">${wizard.name}</figcaption>
+    </figure>
+    <div class="card__body">
+      <div class="card__heading">
+        <h2 class="card__title">${wizard.name}</h2>
+        <span class="badge badge--outline" data-house="${wizard.house}">${house.name}</span>
       </div>
-    `;
+      <p class="card__summary">${wizard.summary}</p>
+      <div class="card__footer">
+        <button
+          class="card__toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="${detailsId}"
+          data-card-toggle
+        >
+          Details <span class="card__toggle-icon" aria-hidden="true">▾</span>
+        </button>
+      </div>
+    </div>
+    <div class="card__details" id="${detailsId}" data-card-details hidden>
+      <dl class="card__meta card__meta--inline">
+        <div>
+          <dt>Aliases</dt>
+          <dd>${wizard.aliases.join(", ")}</dd>
+        </div>
+        <div>
+          <dt>Years at Hogwarts</dt>
+          <dd>${yearsLabel}</dd>
+        </div>
+      </dl>
+      ${eventsMarkup}
+    </div>
+  `;
     return article;
   };
 
@@ -825,75 +825,75 @@
       article.className = "card card--spell";
       article.id = spell.id;
       const detailsId = `card-details-${spell.id}`;
-      article.innerHTML = `
-        <figure class="card__media">
-          <img
-            src="${spell.img}"
-            alt="${spell.name} illustration"
-            loading="lazy"
-            width="320"
-            height="420"
-          />
-          <span class="card__label" aria-hidden="true">Spell</span>
-        </figure>
-        <div class="card__body">
-          <div class="card__heading">
-            <h2 class="card__title">${spell.name}</h2>
-            <span class="badge badge--outline" data-spell-type="${spell.type.toLowerCase()}">
-              ${spell.type}
-            </span>
-          </div>
-          <p class="card__incantation">
-            <span>Incantation</span>
-            <code>${spell.incantation}</code>
-          </p>
-          <div class="card__badges">
-            <span class="badge" data-difficulty="${spell.difficulty}">
-              ${spell.difficulty}
-            </span>
-            ${
-              spell.ministryClass
-                ? `<span class="badge badge--outline">${spell.ministryClass}</span>`
-                : ""
-            }
-          </div>
-          <p class="card__summary">${spell.summary}</p>
-          <div class="card__footer">
-            <button
-              class="card__toggle"
-              type="button"
-              aria-expanded="false"
-              aria-controls="${detailsId}"
-              data-card-toggle
-            >
-              Details <span class="card__toggle-icon" aria-hidden="true">▾</span>
-            </button>
-          </div>
-          <div class="card__details" id="${detailsId}" data-card-details hidden>
-            <p class="card__effect"><strong>Effect:</strong> ${spell.effect}</p>
-            <dl class="card__meta card__meta--inline">
-              <div>
-                <dt>Notable Users</dt>
-                <dd>${spell.notableUsers.join(", ")}</dd>
-              </div>
-              <div>
-                <dt>Counter-Spells</dt>
-                <dd>${spell.counterSpells.join(", ")}</dd>
-              </div>
-            </dl>
-            ${
-              spell.tags && spell.tags.length
-                ? `<ul class="card__tags" aria-label="Tags">${spell.tags
-                    .map(
-                      (tag) =>
-                        `<li><span class="badge badge--outline">${tag}</span></li>`
-                    )
-                    .join("")}</ul>`
-                : ""
-            }
-          </div>
+    article.innerHTML = `
+      <figure class="card__media">
+        <img
+          src="${spell.img}"
+          alt="${spell.name} illustration"
+          loading="lazy"
+          width="320"
+          height="420"
+        />
+        <span class="card__label" aria-hidden="true">Spell</span>
+      </figure>
+      <div class="card__body">
+        <div class="card__heading">
+          <h2 class="card__title">${spell.name}</h2>
+          <span class="badge badge--outline" data-spell-type="${spell.type.toLowerCase()}">
+            ${spell.type}
+          </span>
         </div>
-      `;
+        <p class="card__incantation">
+          <span>Incantation</span>
+          <code>${spell.incantation}</code>
+        </p>
+        <div class="card__badges">
+          <span class="badge" data-difficulty="${spell.difficulty}">
+            ${spell.difficulty}
+          </span>
+          ${
+            spell.ministryClass
+              ? `<span class="badge badge--outline">${spell.ministryClass}</span>`
+              : ""
+          }
+        </div>
+        <p class="card__summary">${spell.summary}</p>
+        <div class="card__footer">
+          <button
+            class="card__toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="${detailsId}"
+            data-card-toggle
+          >
+            Details <span class="card__toggle-icon" aria-hidden="true">▾</span>
+          </button>
+        </div>
+      </div>
+      <div class="card__details" id="${detailsId}" data-card-details hidden>
+        <p class="card__effect"><strong>Effect:</strong> ${spell.effect}</p>
+        <dl class="card__meta card__meta--inline">
+          <div>
+            <dt>Notable Users</dt>
+            <dd>${spell.notableUsers.join(", ")}</dd>
+          </div>
+          <div>
+            <dt>Counter-Spells</dt>
+            <dd>${spell.counterSpells.join(", ")}</dd>
+          </div>
+        </dl>
+        ${
+          spell.tags && spell.tags.length
+            ? `<ul class="card__tags" aria-label="Tags">${spell.tags
+                .map(
+                  (tag) =>
+                    `<li><span class="badge badge--outline">${tag}</span></li>`
+                )
+                .join("")}</ul>`
+            : ""
+        }
+      </div>
+    `;
       return article;
     };
 

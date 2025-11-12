@@ -32,6 +32,7 @@
       summary:
         "Gryffindor champions daring acts and moral courage, urging students to protect others even when the cost is high. Alumni often lead from the front, inspiring communities with bold compassion and a refusal to accept tyranny or injustice.",
       img: "assets/img/house-gryffindor.webp",
+      alt: "Gryffindor House Crest",
     }),
     createHouse({
       id: "slytherin",
@@ -60,6 +61,7 @@
       summary:
         "Slytherin prizes sharp minds and strategic ambition, teaching that influence can be wielded responsibly when guided by conviction. The house nurtures visionaries who adapt quickly, leverage opportunity, and lead transformative movements within the wizarding world.",
       img: "assets/img/house-slytherin.webp",
+      alt: "Slytherin House Crest",
     }),
     createHouse({
       id: "ravenclaw",
@@ -88,6 +90,7 @@
       summary:
         "Ravenclaw elevates inquisitive spirits and original thinkers who see patterns others miss. Its students relish puzzles, prize wit, and delight in sharing knowledge that sparks innovation across magical disciplines and everyday life alike.",
       img: "assets/img/house-ravenclaw.webp",
+      alt: "Ravenclaw House Crest",
     }),
     createHouse({
       id: "hufflepuff",
@@ -116,6 +119,7 @@
       summary:
         "Hufflepuff celebrates steadfast hearts who value cooperation over glory. Members cultivate inclusive communities, working diligently behind the scenes to lift others up while defending fairness with unshakeable resolve and kindness.",
       img: "assets/img/house-hufflepuff.webp",
+      alt: "Hufflepuff House Crest",
     }),
   ]);
 
@@ -148,7 +152,8 @@
             "Sacrificed himself and later defeated Voldemort, ending the Second Wizarding War.",
         },
       ],
-      img: "assets/img/wizard-harry-potter.webp",
+      img: "assets/img/harry-potter.webp",
+      alt: "Harry Potter",
       spoilerLevel: "high",
     }),
     createWizard({
@@ -179,7 +184,8 @@
             "After the war, spearheaded legislation for house-elf rights and educational reform.",
         },
       ],
-      img: "assets/img/wizard-hermione-granger.webp",
+      img: "assets/img/hermione-granger.webp",
+      alt: "Hermione Granger",
       spoilerLevel: "low",
     }),
     createWizard({
@@ -210,7 +216,8 @@
             "Coordinated reinforcements during the Battle of Hogwarts.",
         },
       ],
-      img: "assets/img/wizard-ron-weasley.webp",
+      img: "assets/img/ron-weasley.webp",
+      alt: "Ron Weasley",
       spoilerLevel: "high",
     }),
     createWizard({
@@ -241,7 +248,8 @@
             "Arranged his own death to protect Draco Malfoy and secure Snape's cover.",
         },
       ],
-      img: "assets/img/wizard-albus-dumbledore.webp",
+      img: "assets/img/albus-dumbledore.webp",
+      alt: "Professor Albus Dumbledore",
       spoilerLevel: "high",
     }),
     createWizard({
@@ -272,7 +280,8 @@
             "Became Hogwarts headmaster while secretly sabotaging Death Eater control.",
         },
       ],
-      img: "assets/img/wizard-severus-snape.webp",
+      img: "assets/img/severus-snape.webp",
+      alt: "Professor Severus Snape",
       spoilerLevel: "high",
     }),
     createWizard({
@@ -297,7 +306,8 @@
             "Enchanted the castle to defend itself during the final battle.",
         },
       ],
-      img: "assets/img/wizard-minerva-mcgonagall.webp",
+      img: "assets/img/minerva-mcgonagall.webp",
+      alt: "Professor Minerva McGonagall",
       spoilerLevel: "low",
     }),
     createWizard({
@@ -329,6 +339,7 @@
         },
       ],
       img: "assets/img/wizard-rubeus-hagrid.webp",
+      alt: "Professor Rubeus Hagrid",
       spoilerLevel: "low",
     }),
     createWizard({
@@ -359,7 +370,8 @@
             "Rescued by Harry from Fiendfyre, beginning a shift in allegiances.",
         },
       ],
-      img: "assets/img/wizard-draco-malfoy.webp",
+      img: "assets/img/draco-malfoy.webp",
+      alt: "Draco Malfoy",
       spoilerLevel: "high",
     }),
     createWizard({
@@ -390,7 +402,8 @@
             "Helped Harry gain access to Hogwarts by rallying support at the Hog's Head.",
         },
       ],
-      img: "assets/img/wizard-luna-lovegood.webp",
+      img: "assets/img/luna-lovegood.webp",
+      alt: "Luna Lovegood",
       spoilerLevel: "low",
     }),
     createWizard({
@@ -421,7 +434,8 @@
             "Destroyed the final Horcrux with the Sword of Gryffindor.",
         },
       ],
-      img: "assets/img/wizard-neville-longbottom.webp",
+      img: "assets/img/neville-longbottom.webp",
+      alt: "Neville Longbottom",
       spoilerLevel: "high",
     }),
   ]);

@@ -374,8 +374,8 @@
     article.className = "card card--house";
     const detailsId = `card-details-${house.id}`;
   article.innerHTML = `
-    <figure class="card__media">
-      <img src="${house.img}" alt="${house.name} house crest" loading="lazy" width="320" height="320" />
+        <figure class="card__media">
+          <img src="${house.img}" alt="${house.alt}" loading="lazy" width="320" height="320" />
       <span class="card__label" aria-hidden="true">House</span>
     </figure>
     <div class="card__body">
@@ -464,9 +464,9 @@
           </ul>`
         : "";
   article.innerHTML = `
-    <figure class="card__media">
-      <img src="${wizard.img}" alt="${wizard.name} portrait" loading="lazy" width="320" height="440" />
-      <figcaption class="visually-hidden">${wizard.name}</figcaption>
+        <figure class="card__media">
+          <img src="${wizard.img}" alt="${wizard.alt}" loading="lazy" width="320" height="440" />
+          <figcaption class="visually-hidden">${wizard.alt || wizard.name}</figcaption>
     </figure>
     <div class="card__body">
       <div class="card__heading">

@@ -631,23 +631,42 @@ select:focus-visible {
   border-color: rgba(138, 180, 248, 0.6);
 }
 
-.spoiler-hidden {
+.summary {
   position: relative;
 }
 
-.spoiler-hidden img {
-  filter: blur(14px) saturate(0.6);
+.summary__content {
+  display: block;
+  transition: filter var(--transition-base), opacity var(--transition-base);
 }
 
-.spoiler-hidden .card-summary,
-.spoiler-hidden .timeline-event-body {
-  filter: blur(8px);
-  opacity: 0.4;
-}
-
-.spoiler-hidden .spoiler-placeholder {
+.summary::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 0.5rem 1rem;
+  border-radius: 14px;
+  background: rgba(11, 13, 18, 0.85);
+  color: rgba(138, 180, 248, 0.85);
   font-weight: 600;
-  color: rgba(138, 180, 248, 0.75);
+  text-align: center;
+  letter-spacing: 0.02em;
+  line-height: 1.5;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-base);
+}
+
+body.spoiler-hidden [data-spoiler="high"] .summary__content {
+  filter: blur(9px);
+  opacity: 0.3;
+}
+
+body.spoiler-hidden [data-spoiler="high"] .summary[data-placeholder]::after {
+  content: attr(data-placeholder);
+  opacity: 1;
 }
 
 .empty-state {

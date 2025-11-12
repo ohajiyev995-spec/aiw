@@ -1,11 +1,13 @@
 (function () {
   const spoilerKey = "hogwartsSpoilerReveal";
   const bannerKey = "hogwartsSpoilerDismissed";
+  const SPOILER_PLACEHOLDER = "Spoiler hidden — toggle to view.";
   const state = {
     spoilerReveal: readSpoilerPreference(),
   };
 
   document.addEventListener("DOMContentLoaded", () => {
+    applySpoilerState(state.spoilerReveal);
     setupNavigation();
     setupSpoilerBanner();
     setupSpoilerToggle();
@@ -17,6 +19,35 @@
 
   function $(selector, scope = document) {
     return scope.querySelector(selector);
+  }
+
+  function applySpoilerState(reveal) {
+    if (!document.body) return;
+    document.body.classList.toggle("spoiler-hidden", !reveal);
+  }
+
+  function normalizeSpoilerLevel(level) {
+    return level === "high" ? "high" : "low";
+  }
+
+  function updateSpoilerAwareSummary(element, spoilerLevel, content) {
+    if (!element) return;
+    element.classList.add("summary");
+    let contentSpan = element.querySelector(".summary__content");
+    if (!contentSpan) {
+      contentSpan = document.createElement("span");
+      contentSpan.className = "summary__content";
+      element.textContent = "";
+      element.appendChild(contentSpan);
+    }
+    contentSpan.textContent = content ?? "";
+    if (!state.spoilerReveal && spoilerLevel === "high") {
+      element.dataset.spoilerState = "hidden";
+      element.dataset.placeholder = SPOILER_PLACEHOLDER;
+    } else {
+      element.removeAttribute("data-spoiler-state");
+      element.removeAttribute("data-placeholder");
+    }
   }
 
   function readSpoilerPreference() {
@@ -93,16 +124,18 @@
   }
 
   function updateSpoilerToggle(button, reveal) {
+    if (!button) return;
     button.setAttribute("aria-pressed", String(reveal));
     button.textContent = reveal ? "Spoilers On" : "Spoilers Off";
+    applySpoilerState(reveal);
   }
 
   function renderFeatured() {
     const houseCard = document.querySelector(
-      '.feature-card[data-type="house"]'
+      '.feature-card[data-type="house"]',
     );
     const wizardCard = document.querySelector(
-      '.feature-card[data-type="wizard"]'
+      '.feature-card[data-type="wizard"]',
     );
     if (!houseCard || !wizardCard || !Array.isArray(window.HOUSES)) return;
 
@@ -114,7 +147,9 @@
       ? window.WIZARDS
       : window.WIZARDS.filter((wizard) => wizard.spoilerLevel !== "high");
     const wizard =
-      eligibleWizards.length > 0 ? pickRandom(eligibleWizards) : pickRandom(window.WIZARDS);
+      eligibleWizards.length > 0
+        ? pickRandom(eligibleWizards)
+        : pickRandom(window.WIZARDS);
     populateWizardFeature(wizardCard, wizard);
   }
 
@@ -160,14 +195,9 @@
 
     title.textContent = wizard.name;
 
-    if (!state.spoilerReveal && wizard.spoilerLevel === "high") {
-      summary.innerHTML =
-        '<span class="spoiler-placeholder">Spoiler hidden — toggle to view.</span>';
-      card.classList.add("spoiler-hidden");
-    } else {
-      summary.textContent = wizard.summary;
-      card.classList.remove("spoiler-hidden");
-    }
+    const spoilerLevel = normalizeSpoilerLevel(wizard.spoilerLevel);
+    card.dataset.spoiler = spoilerLevel;
+    updateSpoilerAwareSummary(summary, spoilerLevel, wizard.summary);
 
     traitList.innerHTML = "";
     const badges = (wizard.aliases || []).slice(0, 3);
@@ -240,12 +270,12 @@
 
       const query = (searchInput?.value || "").trim().toLowerCase();
       const selectedTraits = Array.from(
-        traitContainer?.querySelectorAll('input[type="checkbox"]:checked') || []
+        traitContainer?.querySelectorAll('input[type="checkbox"]:checked') ||
+          [],
       ).map((input) => input.value);
 
       const filtered = window.HOUSES.filter((house) => {
-        const matchesQuery =
-          !query || house.name.toLowerCase().includes(query);
+        const matchesQuery = !query || house.name.toLowerCase().includes(query);
         const matchesTraits =
           selectedTraits.length === 0 ||
           selectedTraits.every((trait) => house.traits?.includes(trait));
@@ -358,17 +388,19 @@
       if (!Array.isArray(window.WIZARDS)) return;
 
       const query = (searchInput?.value || "").trim().toLowerCase();
-      const houseValue = houseFilter?.value || "";
+      const houseValue = (houseFilter?.value || "").toLowerCase();
       const yearValue = yearFilter?.value || "";
       const selectedYear = yearValue ? Number(yearValue) : null;
 
       const filtered = window.WIZARDS.filter((wizard) => {
-        const matchesQuery =
-          !query || wizard.name.toLowerCase().includes(query);
-        const matchesHouse =
-          !houseValue || wizard.house.toLowerCase() === houseValue.toLowerCase();
-        const matchesYear =
-          !selectedYear || wizard.years?.includes(selectedYear);
+        if (!wizard) return false;
+        const name = wizard.name || "";
+        const houseName = (wizard.house || "").toLowerCase();
+        const years = Array.isArray(wizard.years) ? wizard.years : [];
+
+        const matchesQuery = !query || name.toLowerCase().includes(query);
+        const matchesHouse = !houseValue || houseName === houseValue;
+        const matchesYear = !selectedYear || years.includes(selectedYear);
         return matchesQuery && matchesHouse && matchesYear;
       });
 
@@ -379,6 +411,8 @@
         const card = document.createElement("article");
         card.className = "card wizard-card";
         card.setAttribute("role", "listitem");
+        const spoilerLevel = normalizeSpoilerLevel(wizard.spoilerLevel);
+        card.dataset.spoiler = spoilerLevel;
 
         const img = document.createElement("img");
         img.src = wizard.img;
@@ -387,28 +421,20 @@
 
         const badge = document.createElement("span");
         badge.className = "house-badge";
-        badge.innerHTML = `<em>House</em> ${wizard.house}`;
+        badge.innerHTML = `<em>House</em> ${wizard.house ?? "Unknown"}`;
 
         const title = document.createElement("h3");
-        title.textContent = wizard.name;
+        title.textContent = wizard.name ?? "Unknown Wizard";
 
         const summary = document.createElement("p");
         summary.className = "card-summary";
-
-        if (!state.spoilerReveal && wizard.spoilerLevel === "high") {
-          card.classList.add("spoiler-hidden");
-          summary.innerHTML =
-            '<span class="spoiler-placeholder">Spoiler hidden — toggle to view.</span>';
-        } else {
-          card.classList.remove("spoiler-hidden");
-          summary.textContent = wizard.summary;
-        }
+        updateSpoilerAwareSummary(summary, spoilerLevel, wizard.summary);
 
         const details = document.createElement("p");
         details.className = "wizard-meta";
-        details.innerHTML = `<strong>Years at Hogwarts:</strong> ${wizard.years.join(
-          ", "
-        )}`;
+        const years = Array.isArray(wizard.years) ? wizard.years : [];
+        const yearsText = years.length > 0 ? years.join(", ") : "Unknown";
+        details.innerHTML = `<strong>Years at Hogwarts:</strong> ${yearsText}`;
 
         card.append(img, badge, title, summary, details);
         fragment.appendChild(card);
@@ -447,30 +473,24 @@
       eventsForYear.forEach((event) => {
         const article = document.createElement("article");
         article.className = "timeline-event";
-        if (!state.spoilerReveal && event.spoilerLevel === "high") {
-          article.classList.add("spoiler-hidden");
-        }
+        const spoilerLevel = normalizeSpoilerLevel(event.spoilerLevel);
+        article.dataset.spoiler = spoilerLevel;
 
         const header = document.createElement("header");
         header.className = "timeline-event-header";
 
         const meta = document.createElement("p");
         meta.className = "timeline-event-meta";
-        meta.textContent = event.meta;
+        meta.textContent = event.meta || "";
 
         const title = document.createElement("h4");
-        title.textContent = event.title;
+        title.textContent = event.title || "";
 
         header.append(meta, title);
 
         const body = document.createElement("p");
         body.className = "timeline-event-body";
-        if (!state.spoilerReveal && event.spoilerLevel === "high") {
-          body.innerHTML =
-            '<span class="spoiler-placeholder">Spoiler hidden — toggle to view.</span>';
-        } else {
-          body.textContent = event.description;
-        }
+        updateSpoilerAwareSummary(body, spoilerLevel, event.description);
 
         article.append(header, body);
         section.appendChild(article);
@@ -515,7 +535,7 @@
             title: event,
             description: `${wizard.name}: ${wizard.summary}`,
             meta: `Wizarding Event • ${wizard.house}`,
-            spoilerLevel: wizard.spoilerLevel || "medium",
+            spoilerLevel: normalizeSpoilerLevel(wizard.spoilerLevel),
           });
         });
       });

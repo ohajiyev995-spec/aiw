@@ -64,7 +64,7 @@ window.WIZARDS = [
       "The boy destined to defeat Voldemort. Harry’s journey embodies courage, friendship, and the power of choice that defines the wizarding world.",
     notableEvents: ["Defeated Voldemort", "Founded Dumbledore’s Army"],
     img: "assets/img/harry-potter.webp",
-    spoilerLevel: "medium",
+    spoilerLevel: "low",
   },
   {
     id: "hermione-granger",
@@ -76,7 +76,7 @@ window.WIZARDS = [
       "A brilliant strategist whose quick thinking and encyclopedic knowledge repeatedly saved her friends and the wider wizarding world.",
     notableEvents: ["Co-founded Dumbledore’s Army", "Destroyed a Horcrux"],
     img: "assets/img/hermione-granger.webp",
-    spoilerLevel: "medium",
+    spoilerLevel: "low",
   },
   {
     id: "ron-weasley",
@@ -88,7 +88,7 @@ window.WIZARDS = [
       "Loyal to the core, Ron balances humor with bravery—standing beside his friends through every trial the wizarding world could conjure.",
     notableEvents: ["Co-founded Dumbledore’s Army", "Destroyed a Horcrux"],
     img: "assets/img/ron-weasley.webp",
-    spoilerLevel: "medium",
+    spoilerLevel: "low",
   },
   {
     id: "albus-dumbledore",
@@ -124,7 +124,7 @@ window.WIZARDS = [
       "A stern yet deeply caring professor, McGonagall exemplifies discipline, bravery, and a fierce love for her students and school.",
     notableEvents: ["Led Hogwarts Defense", "Member of the Order of the Phoenix"],
     img: "assets/img/minerva-mcgonagall.webp",
-    spoilerLevel: "medium",
+    spoilerLevel: "low",
   },
   {
     id: "rubeus-hagrid",
@@ -160,7 +160,7 @@ window.WIZARDS = [
       "With open-minded curiosity and steadfast belief in her friends, Luna uplifts others, proving that kindness and eccentricity can change the world.",
     notableEvents: ["Helped Rescue Harry from Malfoy Manor", "Co-led Dumbledore’s Army"],
     img: "assets/img/luna-lovegood.webp",
-    spoilerLevel: "medium",
+    spoilerLevel: "low",
   },
   {
     id: "neville-longbottom",

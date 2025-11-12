@@ -92,13 +92,13 @@
     select.appendChild(fragment);
   };
 
-  const pointerFineQuery = window.matchMedia("(pointer: fine)");
-  const prefersReducedMotionQuery = window.matchMedia(
-    "(prefers-reduced-motion: reduce)"
-  );
-  const isPointerFine = () => pointerFineQuery.matches;
-  const prefersReducedMotion = () => prefersReducedMotionQuery.matches;
-  let desktopOpenCard = null;
+    const pointerFineQuery = window.matchMedia("(pointer: fine)");
+    const prefersReducedMotionQuery = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    );
+    const isPointerFine = () => pointerFineQuery.matches;
+    const prefersReducedMotion = () => prefersReducedMotionQuery.matches;
+    let desktopOpenCard = null;
 
   const focusableSelectors =
     'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
@@ -300,7 +300,9 @@
     const card = event.currentTarget;
     const state = getState(card);
     const related = event.relatedTarget;
-    if (related && card.contains(related)) return;
+    if (related && card.contains(related)) {
+      return;
+    }
     const timers = getCardTimers(card);
     window.clearTimeout(timers.open);
     timers.open = null;

@@ -512,6 +512,58 @@ h4 {
   gap: 1rem;
 }
 
+.filter__fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.filter__legend {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--color-muted);
+}
+
+.filter__options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.filter__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0.95rem;
+  border-radius: 999px;
+  border: 1px solid rgba(138, 180, 248, 0.2);
+  background: var(--color-surface-alt);
+  cursor: pointer;
+  transition: border var(--transition-fast), background var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.filter__chip input {
+  accent-color: var(--color-accent);
+  width: 1rem;
+  height: 1rem;
+}
+
+.filter__chip span {
+  font-size: 0.85rem;
+  letter-spacing: 0.02em;
+}
+
+.filter__chip:focus-within,
+.filter__chip:hover {
+  border-color: rgba(138, 180, 248, 0.45);
+  background: rgba(138, 180, 248, 0.08);
+  box-shadow: 0 0 0 3px rgba(138, 180, 248, 0.15);
+}
+
 .filter__actions {
   display: flex;
   align-items: center;
@@ -564,13 +616,13 @@ h4 {
   border: 1px dashed rgba(138, 180, 248, 0.3);
 }
 
-.page-wizards.spoiler-hidden .card__summary {
+body[data-page="wizards"].spoiler-hidden .card__summary {
   filter: blur(0.65rem);
   opacity: 0.2;
   position: relative;
 }
 
-.page-wizards.spoiler-hidden .card__summary::after {
+body[data-page="wizards"].spoiler-hidden .card__summary::after {
   content: "Spoiler hidden — toggle to view";
   position: absolute;
   inset: 0.5rem;
@@ -581,6 +633,89 @@ h4 {
   font-weight: 600;
   letter-spacing: 0.04em;
   border-radius: 1rem;
+}
+
+.card__incantation {
+  margin: 0;
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 0.9rem;
+  color: rgba(226, 235, 243, 0.78);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.card__incantation span {
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.7rem;
+  color: var(--color-muted);
+}
+
+.card__incantation code {
+  font-family: "Fira Code", "Courier New", monospace;
+  font-size: 0.85rem;
+  color: var(--color-heading);
+  background: rgba(138, 180, 248, 0.12);
+  border-radius: 0.5rem;
+  padding: 0.35rem 0.6rem;
+}
+
+.card__effect {
+  margin: 0;
+  color: rgba(207, 207, 207, 0.85);
+  font-size: 0.95rem;
+}
+
+.card__effect strong {
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  margin-right: 0.35rem;
+}
+
+.card__badges {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.badge[data-difficulty="Beginner"] {
+  background: rgba(123, 230, 170, 0.14);
+  border-color: rgba(123, 230, 170, 0.35);
+  color: #8cf4bb;
+}
+
+.badge[data-difficulty="Intermediate"] {
+  background: rgba(138, 180, 248, 0.14);
+  border-color: rgba(138, 180, 248, 0.4);
+  color: #8ab4f8;
+}
+
+.badge[data-difficulty="Advanced"] {
+  background: rgba(255, 196, 119, 0.14);
+  border-color: rgba(255, 196, 119, 0.4);
+  color: #ffc477;
+}
+
+.badge[data-difficulty="N.E.W.T."] {
+  background: rgba(255, 138, 213, 0.14);
+  border-color: rgba(255, 138, 213, 0.4);
+  color: #ff8ad5;
+}
+
+.card__meta--inline {
+  display: grid;
+  gap: 1rem;
+}
+
+.card__meta--inline div {
+  gap: 0.35rem;
+}
+
+.card__meta--inline dd {
+  color: rgba(226, 235, 243, 0.9);
 }
 
 .timeline {
@@ -761,6 +896,19 @@ h4 {
 
 .about-card p {
   margin: 0;
+}
+
+.about-list {
+  margin: 0.75rem 0 0;
+  padding-left: 1.15rem;
+  display: grid;
+  gap: 0.35rem;
+  color: rgba(226, 235, 243, 0.85);
+}
+
+.about-list li {
+  margin: 0;
+  line-height: 1.5;
 }
 
 .timeline__year:focus-within,

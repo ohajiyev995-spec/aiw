@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="Browse legendary Hogwarts witches and wizards, filter by house or year, and control spoiler visibility for their defining stories."
+      content="Discover iconic Hogwarts spells, learn their effects, and browse incantations with interactive filters."
     />
-    <title>Notable Wizards | Hogwarts: Houses & Wizards</title>
+    <title>Spells | Hogwarts: Houses & Wizards</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -17,7 +17,7 @@
     <link rel="icon" type="image/webp" href="assets/img/favicon.webp" />
     <link rel="stylesheet" href="assets/css/styles.min.css" />
   </head>
-  <body class="page-wizards" data-page="wizards">
+  <body class="page-spells" data-page="spells">
     <a class="skip-link" href="#main">Skip to content</a>
     <header class="site-header">
       <div class="container site-header__inner">
@@ -51,10 +51,10 @@
               <a href="houses.html">Houses</a>
             </li>
             <li>
-              <a href="wizards.html" aria-current="page">Wizards</a>
+              <a href="wizards.html">Wizards</a>
             </li>
             <li>
-              <a href="spells.html">Spells</a>
+              <a href="spells.html" aria-current="page">Spells</a>
             </li>
             <li>
               <a href="timeline.html">Timeline</a>
@@ -69,63 +69,66 @@
     <main id="main" class="site-main">
       <section class="section">
         <div class="container section__header">
-          <h1>Notable Wizards & Alumni</h1>
+          <h1>Spell Compendium</h1>
           <p>
-            Filter the alumni of Hogwarts by name, house, and the years they attended. Prefer to avoid major plot reveals? Toggle spoiler-friendly summaries with one click.
+            Browse a curated collection of classroom staples and advanced incantations. Search by name or incantation, filter by spell type and difficulty, and explore the techniques that keep Hogwarts witches and wizards prepared.
           </p>
         </div>
         <div class="container">
-          <form class="filter" data-wizards-controls>
+          <form class="filter" data-spells-form>
             <div class="filter__controls">
               <div class="field">
-                <label for="wizard-search">Search by name</label>
+                <label for="spell-search">Search name or incantation</label>
                 <input
-                  id="wizard-search"
+                  id="spell-search"
                   type="search"
-                  name="wizard-search"
-                  placeholder="Ex: Hermione Granger"
+                  name="spell-search"
+                  placeholder="E.g., Patronum or Lumos"
                   autocomplete="off"
-                  data-wizard-search
+                  data-spell-search
                 />
               </div>
-              <div class="field">
-                <label for="wizard-house">Filter by house</label>
-                <select id="wizard-house" name="wizard-house" data-wizard-house>
-                  <option value="">All houses</option>
-                </select>
-              </div>
-              <div class="field">
-                <label for="wizard-year">Filter by year</label>
-                <select id="wizard-year" name="wizard-year" data-wizard-year>
-                  <option value="">All years</option>
-                </select>
-              </div>
+              <fieldset class="filter__fieldset" aria-labelledby="spell-type-label">
+                <legend id="spell-type-label" class="filter__legend">
+                  Filter by type
+                </legend>
+                <div class="filter__options" data-spell-type-options></div>
+              </fieldset>
+              <fieldset
+                class="filter__fieldset"
+                aria-labelledby="spell-difficulty-label"
+              >
+                <legend id="spell-difficulty-label" class="filter__legend">
+                  Filter by difficulty
+                </legend>
+                <div
+                  class="filter__options"
+                  data-spell-difficulty-options
+                ></div>
+              </fieldset>
             </div>
             <div class="filter__actions">
-              <label class="field" for="spoiler-toggle">
-                <span>Spoilers visible</span>
-                <input
-                  id="spoiler-toggle"
-                  type="checkbox"
-                  name="spoiler-toggle"
-                  checked
-                  data-spoiler-toggle
-                />
-              </label>
-              <p class="results-count" data-wizard-count aria-live="polite">
-                Loading wizard profiles…
+              <p class="results-count" data-spell-count aria-live="polite">
+                Loading spellbook…
               </p>
+              <button
+                class="button button--ghost"
+                type="button"
+                data-spell-clear
+              >
+                Clear filters
+              </button>
             </div>
           </form>
         </div>
         <div class="container">
           <div
             class="grid grid--cards"
-            data-wizards-grid
+            data-spells-grid
             aria-live="polite"
             aria-busy="true"
           >
-            <p>Loading wizard profiles…</p>
+            <p>Loading spells…</p>
           </div>
         </div>
       </section>

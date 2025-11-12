@@ -371,6 +371,192 @@
     updateSpoilerState(false);
   };
 
+  const initSpellsPage = () => {
+    if (body.dataset.page !== "spells" || !Array.isArray(window.SPELLS)) return;
+    const form = $("[data-spells-form]");
+    const searchInput = $("[data-spell-search]");
+    const typeContainer = $("[data-spell-type-options]");
+    const difficultyContainer = $("[data-spell-difficulty-options]");
+    const grid = $("[data-spells-grid]");
+    const count = $("[data-spell-count]");
+    const clearButton = $("[data-spell-clear]");
+
+    if (
+      !form ||
+      !searchInput ||
+      !typeContainer ||
+      !difficultyContainer ||
+      !grid ||
+      !count ||
+      !clearButton
+    ) {
+      return;
+    }
+
+    const difficultyOrder = ["Beginner", "Intermediate", "Advanced", "N.E.W.T."];
+
+    const createChip = (value, group) => {
+      const label = document.createElement("label");
+      label.className = "filter__chip";
+      const input = document.createElement("input");
+      input.type = "checkbox";
+      input.value = value;
+      input.name = `${group}[]`;
+      input.dataset.group = group;
+      const text = document.createElement("span");
+      text.textContent = value;
+      label.append(input, text);
+      return label;
+    };
+
+    const renderChips = (container, values, group) => {
+      const fragment = document.createDocumentFragment();
+      values.forEach((value) => {
+        fragment.appendChild(createChip(value, group));
+      });
+      container.appendChild(fragment);
+    };
+
+    const uniqueTypes = Array.from(
+      new Set(window.SPELLS.map((spell) => spell.type))
+    ).sort((a, b) => a.localeCompare(b));
+
+    const uniqueDifficulties = Array.from(
+      new Set(window.SPELLS.map((spell) => spell.difficulty))
+    ).sort((a, b) => difficultyOrder.indexOf(a) - difficultyOrder.indexOf(b));
+
+    renderChips(typeContainer, uniqueTypes, "type");
+    renderChips(difficultyContainer, uniqueDifficulties, "difficulty");
+
+    const getSelectedValues = (container) =>
+      Array.from(container.querySelectorAll("input:checked")).map(
+        (input) => input.value
+      );
+
+    const renderSpellCard = (spell) => {
+      const article = document.createElement("article");
+      article.className = "card card--spell";
+      article.id = spell.id;
+      article.innerHTML = `
+        <figure class="card__media">
+          <img
+            src="${spell.img}"
+            alt="${spell.name} illustration"
+            loading="lazy"
+            width="320"
+            height="420"
+          />
+          <span class="card__label" aria-hidden="true">Spell</span>
+        </figure>
+        <div class="card__body">
+          <div class="card__heading">
+            <h2 class="card__title">${spell.name}</h2>
+            <span class="badge badge--outline" data-spell-type="${spell.type.toLowerCase()}">
+              ${spell.type}
+            </span>
+          </div>
+          <p class="card__incantation">
+            <span>Incantation</span>
+            <code>${spell.incantation}</code>
+          </p>
+          <div class="card__badges">
+            <span class="badge" data-difficulty="${spell.difficulty}">
+              ${spell.difficulty}
+            </span>
+            ${
+              spell.ministryClass
+                ? `<span class="badge badge--outline">${spell.ministryClass}</span>`
+                : ""
+            }
+          </div>
+          <p class="card__summary">${spell.summary}</p>
+          <p class="card__effect"><strong>Effect:</strong> ${spell.effect}</p>
+          <dl class="card__meta card__meta--inline">
+            <div>
+              <dt>Notable Users</dt>
+              <dd>${spell.notableUsers.join(", ")}</dd>
+            </div>
+            <div>
+              <dt>Counter-Spells</dt>
+              <dd>${spell.counterSpells.join(", ")}</dd>
+            </div>
+          </dl>
+          ${
+            spell.tags && spell.tags.length
+              ? `<ul class="card__tags" aria-label="Tags">${spell.tags
+                  .map(
+                    (tag) =>
+                      `<li><span class="badge badge--outline">${tag}</span></li>`
+                  )
+                  .join("")}</ul>`
+              : ""
+          }
+        </div>
+      `;
+      return article;
+    };
+
+    const render = () => {
+      grid.setAttribute("aria-busy", "true");
+      const query = searchInput.value.trim().toLowerCase();
+      const selectedTypes = getSelectedValues(typeContainer);
+      const selectedDifficulties = getSelectedValues(difficultyContainer);
+
+      const filtered = window.SPELLS.filter((spell) => {
+        const matchesQuery =
+          !query ||
+          spell.name.toLowerCase().includes(query) ||
+          spell.incantation.toLowerCase().includes(query);
+        const matchesType =
+          !selectedTypes.length || selectedTypes.includes(spell.type);
+        const matchesDifficulty =
+          !selectedDifficulties.length ||
+          selectedDifficulties.includes(spell.difficulty);
+        return matchesQuery && matchesType && matchesDifficulty;
+      });
+
+      grid.innerHTML = "";
+
+      if (!filtered.length) {
+        renderEmptyState(
+          grid,
+          "No spells match those filters yet. Try adjusting the search or toggles."
+        );
+      } else {
+        const fragment = document.createDocumentFragment();
+        filtered.forEach((spell) => fragment.appendChild(renderSpellCard(spell)));
+        grid.appendChild(fragment);
+      }
+
+      count.textContent = `${filtered.length} ${
+        filtered.length === 1 ? "spell" : "spells"
+      } found`;
+      grid.setAttribute("aria-busy", "false");
+    };
+
+    form.addEventListener("submit", (event) => event.preventDefault());
+    searchInput.addEventListener("input", render);
+    typeContainer.addEventListener("change", render);
+    difficultyContainer.addEventListener("change", render);
+    clearButton.addEventListener("click", () => {
+      searchInput.value = "";
+      typeContainer
+        .querySelectorAll('input[type="checkbox"]')
+        .forEach((input) => {
+          input.checked = false;
+        });
+      difficultyContainer
+        .querySelectorAll('input[type="checkbox"]')
+        .forEach((input) => {
+          input.checked = false;
+        });
+      render();
+      searchInput.focus();
+    });
+
+    render();
+  };
+
   const buildTimelineEvents = () => {
     const events = [];
     if (Array.isArray(window.HOUSES)) {
@@ -502,6 +688,7 @@
   initFeaturedSection();
   initHousesPage();
   initWizardsPage();
+  initSpellsPage();
   initTimelinePage();
   activateScrollEffects();
 })();

@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Follow the major events that shaped Hogwarts and the wizarding world."
+    />
+    <title>Wizarding Timeline</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Inter:wght@400;500;600;700&display=swap"
+      onload="this.rel='stylesheet'"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Inter:wght@400;500;600;700&display=swap"
+      />
+    </noscript>
+    <link rel="stylesheet" href="assets/css/styles.min.css" />
+  </head>
+  <body data-page="timeline">
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <div class="container nav-container">
+        <a class="brand" href="index.html">Hogwarts: Houses &amp; Wizards</a>
+        <button
+          class="nav-toggle"
+          type="button"
+          aria-controls="primary-navigation"
+          aria-expanded="false"
+        >
+          <span class="sr-only">Toggle navigation</span>
+          <span aria-hidden="true" class="nav-toggle-bar"></span>
+          <span aria-hidden="true" class="nav-toggle-bar"></span>
+          <span aria-hidden="true" class="nav-toggle-bar"></span>
+        </button>
+        <nav class="primary-nav" id="primary-navigation">
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="houses.html">Houses</a></li>
+            <li><a href="wizards.html">Wizards</a></li>
+            <li>
+              <a href="timeline.html" class="is-active" aria-current="page"
+                >Timeline</a
+              >
+            </li>
+            <li><a href="about.html">About</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+    <main id="main" class="page">
+      <div class="spoiler-banner" id="spoiler-banner" role="status">
+        <div class="container spoiler-banner-content">
+          <p>This site may contain major plot spoilers.</p>
+          <button
+            type="button"
+            class="banner-dismiss"
+            data-banner-dismiss
+            aria-label="Dismiss spoiler notice"
+          >
+            Dismiss
+          </button>
+        </div>
+      </div>
+      <section class="page-header">
+        <div class="container">
+          <p class="eyebrow">Chronicle</p>
+          <h1>Wizarding World Timeline</h1>
+          <p class="page-subtitle">
+            Trace the key events tied to Hogwarts houses and notable witches and
+            wizards, grouped by year.
+          </p>
+          <button
+            type="button"
+            id="spoiler-toggle"
+            class="toggle-button"
+            aria-pressed="false"
+            data-context="timeline"
+          >
+            Spoilers Off
+          </button>
+        </div>
+      </section>
+      <section class="timeline-section" aria-labelledby="timeline-heading">
+        <div class="container">
+          <h2 id="timeline-heading" class="sr-only">Timeline of events</h2>
+          <div class="timeline-container" id="timeline-container"></div>
+          <p class="empty-state" id="timeline-empty-state" hidden>
+            No events available. Please refresh the page to try again.
+          </p>
+        </div>
+      </section>
+    </main>
+    <footer class="site-footer">
+      <div class="container footer-content">
+        <div>
+          <p class="footer-brand">Hogwarts: Houses &amp; Wizards</p>
+          <p class="footer-copy">
+            Fan site for educational purposes. All rights belong to their
+            respective owners.
+          </p>
+        </div>
+        <div class="footer-social">
+          <p class="footer-heading">Connect</p>
+          <ul>
+            <li>
+              <a
+                href="https://www.linkedin.com/in/your-username/"
+                target="_blank"
+                rel="noopener"
+                >LinkedIn</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://github.com/your-username"
+                target="_blank"
+                rel="noopener"
+                >GitHub</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://www.instagram.com/your-username/"
+                target="_blank"
+                rel="noopener"
+                >Instagram</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+      <p class="footer-note">Built using AI prompts only — no manual edits.</p>
+    </footer>
+    <script src="assets/js/data.min.js" defer></script>
+    <script src="assets/js/main.min.js" defer></script>
+  </body>
+</html>

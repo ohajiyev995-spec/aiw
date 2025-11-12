@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Explore the houses and wizards of Hogwarts through a data-driven, fan-made guide with timelines, profiles, and more."
+    />
+    <title>Hogwarts: Houses &amp; Wizards</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Inter:wght@400;500;600;700&display=swap"
+      onload="this.rel='stylesheet'"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Inter:wght@400;500;600;700&display=swap"
+      />
+    </noscript>
+    <link rel="stylesheet" href="assets/css/styles.min.css" />
+  </head>
+  <body data-page="home">
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <div class="container nav-container">
+        <a class="brand" href="index.html">Hogwarts: Houses &amp; Wizards</a>
+        <button
+          class="nav-toggle"
+          type="button"
+          aria-controls="primary-navigation"
+          aria-expanded="false"
+        >
+          <span class="sr-only">Toggle navigation</span>
+          <span aria-hidden="true" class="nav-toggle-bar"></span>
+          <span aria-hidden="true" class="nav-toggle-bar"></span>
+          <span aria-hidden="true" class="nav-toggle-bar"></span>
+        </button>
+        <nav class="primary-nav" id="primary-navigation">
+          <ul>
+            <li>
+              <a href="index.html" class="is-active" aria-current="page"
+                >Home</a
+              >
+            </li>
+            <li><a href="houses.html">Houses</a></li>
+            <li><a href="wizards.html">Wizards</a></li>
+            <li><a href="timeline.html">Timeline</a></li>
+            <li><a href="about.html">About</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+    <main id="main">
+      <section class="hero">
+        <div class="container hero-content">
+          <div class="hero-copy">
+            <p class="eyebrow">Fan Guide</p>
+            <h1>Hogwarts: Houses &amp; Wizards</h1>
+            <p class="hero-subtitle">
+              A fan-made guide to the people and houses that shaped the
+              wizarding world.
+            </p>
+            <a class="button primary" href="houses.html">Explore the Houses</a>
+          </div>
+          <div class="hero-visual" aria-hidden="true">
+            <div class="hero-vignette"></div>
+            <svg class="hero-sparkle" viewBox="0 0 160 160" role="presentation">
+              <defs>
+                <radialGradient id="sparkleGradient" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="#8AB4F8" stop-opacity="0.8" />
+                  <stop offset="100%" stop-color="#8AB4F8" stop-opacity="0" />
+                </radialGradient>
+              </defs>
+              <circle cx="80" cy="80" r="70" fill="url(#sparkleGradient)" />
+              <circle
+                cx="80"
+                cy="80"
+                r="24"
+                fill="none"
+                stroke="#8AB4F8"
+                stroke-width="1.5"
+                stroke-dasharray="6 10"
+              />
+              <path
+                d="M80 36 L86 74 L124 80 L86 86 L80 124 L74 86 L36 80 L74 74 Z"
+                fill="#E6EDF3"
+                fill-opacity="0.35"
+              />
+            </svg>
+          </div>
+        </div>
+      </section>
+      <section class="featured" aria-labelledby="featured-heading">
+        <div class="container">
+          <div class="section-header">
+            <p class="eyebrow">Featured Spotlight</p>
+            <h2 id="featured-heading">This Week&rsquo;s Magical Highlights</h2>
+            <p>
+              Discover a standout house and wizard, auto-selected from our data
+              set each time you visit.
+            </p>
+          </div>
+          <div class="featured-grid">
+            <article class="feature-card" data-type="house">
+              <div class="feature-meta">Featured House</div>
+              <img
+                src="assets/img/house-placeholder.webp"
+                alt=""
+                loading="lazy"
+              />
+              <h3>House Name</h3>
+              <p class="feature-summary">
+                A remarkable house known for its magical legacy.
+              </p>
+              <ul class="trait-list" aria-label="House traits"></ul>
+            </article>
+            <article class="feature-card" data-type="wizard">
+              <div class="feature-meta">Featured Wizard</div>
+              <img
+                src="assets/img/wizard-placeholder.webp"
+                alt=""
+                loading="lazy"
+              />
+              <h3>Wizard Name</h3>
+              <p class="feature-summary">
+                An influential witch or wizard whose story inspires others.
+              </p>
+              <ul class="trait-list" aria-label="Wizard highlights"></ul>
+            </article>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer class="site-footer">
+      <div class="container footer-content">
+        <div>
+          <p class="footer-brand">Hogwarts: Houses &amp; Wizards</p>
+          <p class="footer-copy">
+            Fan site for educational purposes. All rights belong to their
+            respective owners.
+          </p>
+        </div>
+        <div class="footer-social">
+          <p class="footer-heading">Connect</p>
+          <ul>
+            <li>
+              <a
+                href="https://www.linkedin.com/in/your-username/"
+                target="_blank"
+                rel="noopener"
+                >LinkedIn</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://github.com/your-username"
+                target="_blank"
+                rel="noopener"
+                >GitHub</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://www.instagram.com/your-username/"
+                target="_blank"
+                rel="noopener"
+                >Instagram</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+      <p class="footer-note">Built using AI prompts only — no manual edits.</p>
+    </footer>
+    <script src="assets/js/data.min.js" defer></script>
+    <script src="assets/js/main.min.js" defer></script>
+  </body>
+</html>

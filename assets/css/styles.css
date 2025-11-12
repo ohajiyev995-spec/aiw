@@ -368,6 +368,11 @@ h4 {
   box-shadow: 0 24px 55px rgba(5, 8, 14, 0.5);
 }
 
+.card.is-open {
+  border-color: rgba(138, 180, 248, 0.4);
+  box-shadow: 0 26px 60px rgba(5, 8, 14, 0.55);
+}
+
 .card__media {
   position: relative;
   overflow: hidden;
@@ -405,6 +410,44 @@ h4 {
 .card__summary {
   margin: 0;
   color: rgba(226, 235, 243, 0.85);
+}
+
+.card__footer {
+  margin-top: 1.25rem;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.card__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.55rem 1.1rem;
+  border-radius: 999px;
+  border: 1px solid rgba(138, 180, 248, 0.35);
+  background: rgba(138, 180, 248, 0.12);
+  color: var(--color-heading);
+  font-size: 0.85rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition: background var(--transition-fast), border var(--transition-fast),
+    color var(--transition-fast), transform var(--transition-fast);
+}
+
+.card__toggle:hover,
+.card__toggle:focus-visible {
+  background: rgba(138, 180, 248, 0.22);
+  border-color: rgba(138, 180, 248, 0.55);
+  color: var(--color-heading);
+  transform: translateY(-1px);
+}
+
+.card__toggle-icon {
+  transition: transform var(--transition-fast);
+}
+
+.card.is-open .card__toggle-icon {
+  transform: rotate(180deg);
 }
 
 .card__meta {
@@ -716,6 +759,48 @@ body[data-page="wizards"].spoiler-hidden .card__summary::after {
 
 .card__meta--inline dd {
   color: rgba(226, 235, 243, 0.9);
+}
+
+.card__details {
+  margin-top: 1.2rem;
+  display: grid;
+  gap: 1rem;
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height var(--transition-medium), opacity var(--transition-medium);
+}
+
+.card__details[data-open="true"] {
+  opacity: 1;
+}
+
+.card__details[hidden] {
+  display: none;
+}
+
+.card__notes {
+  margin: 0;
+  padding-left: 1.1rem;
+  display: grid;
+  gap: 0.4rem;
+  color: rgba(226, 235, 243, 0.85);
+}
+
+.card__notes li {
+  list-style: disc;
+}
+
+.card__notes li strong {
+  display: block;
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.card__notes li span {
+  display: block;
 }
 
 .timeline {
@@ -1057,6 +1142,10 @@ body[data-page="wizards"].spoiler-hidden .card__summary::after {
   }
 
   .site-nav {
+    transition: none;
+  }
+
+  .card__details {
     transition: none;
   }
 }

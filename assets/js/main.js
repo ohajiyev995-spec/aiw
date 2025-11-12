@@ -5,10 +5,6 @@
   const $$ = (selector, scope = document) =>
     Array.from(scope.querySelectorAll(selector));
 
-  const prefersReducedMotion = window.matchMedia(
-    "(prefers-reduced-motion: reduce)"
-  ).matches;
-
   const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
 
   const SPOILER_STORAGE_KEY = "wizardSpoilersVisible";
@@ -96,43 +92,311 @@
     select.appendChild(fragment);
   };
 
+  const pointerFineQuery = window.matchMedia("(pointer: fine)");
+  const prefersReducedMotionQuery = window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  );
+  const isPointerFine = () => pointerFineQuery.matches;
+  const prefersReducedMotion = () => prefersReducedMotionQuery.matches;
+  let desktopOpenCard = null;
+
+  pointerFineQuery.addEventListener("change", () => {
+    if (!isPointerFine()) {
+      desktopOpenCard = null;
+    }
+  });
+
+  const focusableSelectors =
+    'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+  const getCardTimers = (card) => {
+    if (!card._hoverTimers) {
+      card._hoverTimers = { open: null, close: null };
+    }
+    return card._hoverTimers;
+  };
+
+  const clearCardTimers = (card) => {
+    const timers = card._hoverTimers;
+    if (!timers) return;
+    if (timers.open) window.clearTimeout(timers.open);
+    if (timers.close) window.clearTimeout(timers.close);
+    timers.open = null;
+    timers.close = null;
+  };
+
+  const focusFirstElement = (container) => {
+    const focusable = container.querySelectorAll(focusableSelectors);
+    if (focusable.length) {
+      focusable[0].focus({ preventScroll: true });
+    } else {
+      container.focus({ preventScroll: true });
+    }
+  };
+
+  const animateOpen = (details) => {
+    details.hidden = false;
+    if (prefersReducedMotion()) {
+      details.dataset.open = "true";
+      details.style.maxHeight = "";
+      details.style.opacity = "";
+      return;
+    }
+
+    details.dataset.open = "true";
+    details.style.maxHeight = "0px";
+    details.style.opacity = "0";
+    requestAnimationFrame(() => {
+      const height = details.scrollHeight;
+      details.style.maxHeight = `${height}px`;
+      details.style.opacity = "1";
+    });
+    const handle = (event) => {
+      if (event.propertyName && event.propertyName !== "max-height" && event.propertyName !== "maxHeight") {
+        return;
+      }
+      details.style.maxHeight = "";
+      details.style.opacity = "";
+      details.removeEventListener("transitionend", handle);
+    };
+    details.addEventListener("transitionend", handle);
+  };
+
+  const animateClose = (details) => {
+    if (prefersReducedMotion()) {
+      details.dataset.open = "false";
+      details.hidden = true;
+      return;
+    }
+
+    const height = details.scrollHeight;
+    details.style.maxHeight = `${height}px`;
+    details.style.opacity = "1";
+    requestAnimationFrame(() => {
+      details.dataset.open = "false";
+      details.style.maxHeight = "0px";
+      details.style.opacity = "0";
+    });
+    const handle = (event) => {
+      if (event.propertyName && event.propertyName !== "max-height" && event.propertyName !== "maxHeight") {
+        return;
+      }
+      details.hidden = true;
+      details.style.maxHeight = "";
+      details.style.opacity = "";
+      details.removeEventListener("transitionend", handle);
+    };
+    details.addEventListener("transitionend", handle);
+  };
+
+  const openCard = (card, { explicit = false, focusPanel = false } = {}) => {
+    if (!card) return;
+    const toggle = card.querySelector("[data-card-toggle]");
+    const details = card.querySelector("[data-card-details]");
+    if (!toggle || !details) return;
+
+    clearCardTimers(card);
+
+    const wasOpen = card.classList.contains("is-open");
+
+    if (explicit) {
+      card.dataset.explicitOpen = "true";
+    } else if (card.dataset.explicitOpen !== "true") {
+      card.dataset.explicitOpen = "false";
+    }
+
+    if (isPointerFine()) {
+      if (desktopOpenCard && desktopOpenCard !== card) {
+        closeCard(desktopOpenCard);
+      }
+      desktopOpenCard = card;
+    }
+
+    toggle.setAttribute("aria-expanded", "true");
+    details.setAttribute("aria-hidden", "false");
+
+    if (!wasOpen || details.hidden) {
+      animateOpen(details);
+    }
+
+    card.classList.add("is-open");
+
+    if (explicit && focusPanel) {
+      requestAnimationFrame(() => {
+        focusFirstElement(details);
+      });
+    }
+  };
+
+  const closeCard = (card, { focusButton = false } = {}) => {
+    if (!card) return;
+    const toggle = card.querySelector("[data-card-toggle]");
+    const details = card.querySelector("[data-card-details]");
+    if (!toggle || !details) return;
+
+    clearCardTimers(card);
+
+    card.dataset.explicitOpen = "false";
+    toggle.setAttribute("aria-expanded", "false");
+    details.setAttribute("aria-hidden", "true");
+
+    if (!details.hidden) {
+      animateClose(details);
+    } else {
+      details.hidden = true;
+      details.dataset.open = "false";
+    }
+
+    card.classList.remove("is-open");
+    if (desktopOpenCard === card) {
+      desktopOpenCard = null;
+    }
+
+    if (focusButton) {
+      requestAnimationFrame(() => {
+        toggle.focus({ preventScroll: true });
+      });
+    }
+  };
+
+  const handleMouseEnter = (event) => {
+    if (!isPointerFine()) return;
+    const card = event.currentTarget;
+    const timers = getCardTimers(card);
+    window.clearTimeout(timers.close);
+    timers.open = window.setTimeout(() => {
+      if (card.dataset.explicitOpen === "true") return;
+      openCard(card);
+    }, 180);
+  };
+
+  const handleMouseLeave = (event) => {
+    if (!isPointerFine()) return;
+    const card = event.currentTarget;
+    const timers = getCardTimers(card);
+    window.clearTimeout(timers.open);
+    timers.close = window.setTimeout(() => {
+      if (card.dataset.explicitOpen === "true") return;
+      closeCard(card);
+    }, 240);
+  };
+
+  const handleToggleClick = (event) => {
+    event.preventDefault();
+    const button = event.currentTarget;
+    const card = button.closest(".card");
+    if (!card) return;
+
+    const isOpen = card.classList.contains("is-open");
+    const isExplicit = card.dataset.explicitOpen === "true";
+
+    if (!isOpen) {
+      openCard(card, { explicit: true, focusPanel: true });
+    } else if (isExplicit) {
+      closeCard(card, { focusButton: true });
+    } else {
+      openCard(card, { explicit: true, focusPanel: true });
+    }
+  };
+
+  const handleCardKeydown = (event) => {
+    if (event.key !== "Escape") return;
+    const card = event.currentTarget;
+    if (!card.classList.contains("is-open")) return;
+    closeCard(card, { focusButton: true });
+  };
+
+  const initializeCard = (card) => {
+    if (!card || card.dataset.cardReady === "true") return;
+    const toggle = card.querySelector("[data-card-toggle]");
+    const details = card.querySelector("[data-card-details]");
+    if (!toggle || !details) return;
+
+    card.dataset.cardReady = "true";
+    card.dataset.explicitOpen = "false";
+
+    if (!details.id) {
+      const generatedId = `card-details-${Math.random().toString(36).slice(2, 9)}`;
+      details.id = generatedId;
+      toggle.setAttribute("aria-controls", generatedId);
+    }
+    if (!toggle.id) {
+      toggle.id = `${details.id}-toggle`;
+    }
+
+    toggle.setAttribute("aria-expanded", "false");
+    details.setAttribute("aria-hidden", "true");
+    details.setAttribute("role", "region");
+    details.setAttribute("aria-labelledby", toggle.id);
+    details.setAttribute("tabindex", "-1");
+    details.dataset.open = "false";
+    details.hidden = true;
+
+    card.addEventListener("mouseenter", handleMouseEnter);
+    card.addEventListener("mouseleave", handleMouseLeave);
+    toggle.addEventListener("click", handleToggleClick);
+    card.addEventListener("keydown", handleCardKeydown);
+  };
+
+  const initializeCards = (root) => {
+    if (!root) return;
+    const cards = $$(".card", root);
+    cards.forEach((card) => initializeCard(card));
+  };
+
   const renderHouseCard = (house) => {
     const article = document.createElement("article");
     article.className = "card card--house";
+    const detailsId = `card-details-${house.id}`;
     article.innerHTML = `
       <figure class="card__media">
         <img src="${house.img}" alt="${house.name} house crest" loading="lazy" width="320" height="320" />
         <span class="card__label" aria-hidden="true">House</span>
       </figure>
       <div class="card__body">
-        <h2 class="card__title">${house.name}</h2>
+        <div class="card__heading">
+          <h2 class="card__title">${house.name}</h2>
+        </div>
         <p class="card__summary">${house.summary}</p>
-        <dl class="card__meta">
-          <div>
-            <dt>Founder</dt>
-            <dd>${house.founder}</dd>
-          </div>
-          <div>
-            <dt>Mascot</dt>
-            <dd>${house.mascot}</dd>
-          </div>
-          <div>
-            <dt>Relic</dt>
-            <dd>${house.relic}</dd>
-          </div>
-          <div>
-            <dt>Ghost</dt>
-            <dd>${house.ghost}</dd>
-          </div>
-        </dl>
-        <ul class="card__tags" aria-label="Traits">
-          ${house.traits
-            .map(
-              (trait) =>
-                `<li><span class="badge" data-badge="${trait.toLowerCase()}">${trait}</span></li>`
-            )
-            .join("")}
-        </ul>
+        <div class="card__footer">
+          <button
+            class="card__toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="${detailsId}"
+            data-card-toggle
+          >
+            Details <span class="card__toggle-icon" aria-hidden="true">▾</span>
+          </button>
+        </div>
+        <div class="card__details" id="${detailsId}" data-card-details hidden>
+          <dl class="card__meta card__meta--inline">
+            <div>
+              <dt>Founder</dt>
+              <dd>${house.founder}</dd>
+            </div>
+            <div>
+              <dt>Mascot</dt>
+              <dd>${house.mascot}</dd>
+            </div>
+            <div>
+              <dt>Relic</dt>
+              <dd>${house.relic}</dd>
+            </div>
+            <div>
+              <dt>Ghost</dt>
+              <dd>${house.ghost}</dd>
+            </div>
+          </dl>
+          <ul class="card__tags" aria-label="Traits">
+            ${house.traits
+              .map(
+                (trait) =>
+                  `<li><span class="badge" data-badge="${trait.toLowerCase()}">${trait}</span></li>`
+              )
+              .join("")}
+          </ul>
+        </div>
       </div>
     `;
     return article;
@@ -149,6 +413,22 @@
     const yearsLabel = wizard.years.length
       ? `${Math.min(...wizard.years)}–${Math.max(...wizard.years)}`
       : "Unknown years";
+    const detailsId = `card-details-${wizard.id}`;
+    const eventsMarkup =
+      wizard.notableEvents && wizard.notableEvents.length
+        ? `<ul class="card__notes">
+            ${wizard.notableEvents
+              .map(
+                (event) => `
+                  <li>
+                    <strong>${event.year} · ${event.title}</strong>
+                    <span>${event.description}</span>
+                  </li>
+                `
+              )
+              .join("")}
+          </ul>`
+        : "";
     article.innerHTML = `
       <figure class="card__media">
         <img src="${wizard.img}" alt="${wizard.name} portrait" loading="lazy" width="320" height="440" />
@@ -160,16 +440,30 @@
           <span class="badge badge--outline" data-house="${wizard.house}">${house.name}</span>
         </div>
         <p class="card__summary">${wizard.summary}</p>
-        <dl class="card__meta">
-          <div>
-            <dt>Aliases</dt>
-            <dd>${wizard.aliases.join(", ")}</dd>
-          </div>
-          <div>
-            <dt>Years at Hogwarts</dt>
-            <dd>${yearsLabel}</dd>
-          </div>
-        </dl>
+        <div class="card__footer">
+          <button
+            class="card__toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="${detailsId}"
+            data-card-toggle
+          >
+            Details <span class="card__toggle-icon" aria-hidden="true">▾</span>
+          </button>
+        </div>
+        <div class="card__details" id="${detailsId}" data-card-details hidden>
+          <dl class="card__meta card__meta--inline">
+            <div>
+              <dt>Aliases</dt>
+              <dd>${wizard.aliases.join(", ")}</dd>
+            </div>
+            <div>
+              <dt>Years at Hogwarts</dt>
+              <dd>${yearsLabel}</dd>
+            </div>
+          </dl>
+          ${eventsMarkup}
+        </div>
       </div>
     `;
     return article;
@@ -262,6 +556,7 @@
           fragment.appendChild(card);
         });
         grid.appendChild(fragment);
+        initializeCards(grid);
       }
 
       if (count) {
@@ -317,6 +612,7 @@
           fragment.appendChild(card);
         });
         grid.appendChild(fragment);
+        initializeCards(grid);
       }
 
       if (count) {
@@ -354,7 +650,7 @@
     yearSelect.addEventListener("change", render);
     spoilerToggle.addEventListener("change", () => {
       updateSpoilerState();
-      if (!prefersReducedMotion) {
+      if (!prefersReducedMotion()) {
         body.classList.add("spoiler-animate");
         window.setTimeout(() => body.classList.remove("spoiler-animate"), 600);
       }
@@ -437,6 +733,7 @@
       const article = document.createElement("article");
       article.className = "card card--spell";
       article.id = spell.id;
+      const detailsId = `card-details-${spell.id}`;
       article.innerHTML = `
         <figure class="card__media">
           <img
@@ -470,27 +767,40 @@
             }
           </div>
           <p class="card__summary">${spell.summary}</p>
-          <p class="card__effect"><strong>Effect:</strong> ${spell.effect}</p>
-          <dl class="card__meta card__meta--inline">
-            <div>
-              <dt>Notable Users</dt>
-              <dd>${spell.notableUsers.join(", ")}</dd>
-            </div>
-            <div>
-              <dt>Counter-Spells</dt>
-              <dd>${spell.counterSpells.join(", ")}</dd>
-            </div>
-          </dl>
-          ${
-            spell.tags && spell.tags.length
-              ? `<ul class="card__tags" aria-label="Tags">${spell.tags
-                  .map(
-                    (tag) =>
-                      `<li><span class="badge badge--outline">${tag}</span></li>`
-                  )
-                  .join("")}</ul>`
-              : ""
-          }
+          <div class="card__footer">
+            <button
+              class="card__toggle"
+              type="button"
+              aria-expanded="false"
+              aria-controls="${detailsId}"
+              data-card-toggle
+            >
+              Details <span class="card__toggle-icon" aria-hidden="true">▾</span>
+            </button>
+          </div>
+          <div class="card__details" id="${detailsId}" data-card-details hidden>
+            <p class="card__effect"><strong>Effect:</strong> ${spell.effect}</p>
+            <dl class="card__meta card__meta--inline">
+              <div>
+                <dt>Notable Users</dt>
+                <dd>${spell.notableUsers.join(", ")}</dd>
+              </div>
+              <div>
+                <dt>Counter-Spells</dt>
+                <dd>${spell.counterSpells.join(", ")}</dd>
+              </div>
+            </dl>
+            ${
+              spell.tags && spell.tags.length
+                ? `<ul class="card__tags" aria-label="Tags">${spell.tags
+                    .map(
+                      (tag) =>
+                        `<li><span class="badge badge--outline">${tag}</span></li>`
+                    )
+                    .join("")}</ul>`
+                : ""
+            }
+          </div>
         </div>
       `;
       return article;
@@ -526,6 +836,7 @@
         const fragment = document.createDocumentFragment();
         filtered.forEach((spell) => fragment.appendChild(renderSpellCard(spell)));
         grid.appendChild(fragment);
+        initializeCards(grid);
       }
 
       count.textContent = `${filtered.length} ${
@@ -671,7 +982,7 @@
   };
 
   const activateScrollEffects = () => {
-    if (prefersReducedMotion) return;
+    if (prefersReducedMotion()) return;
     const hero = $(".hero");
     if (!hero) return;
     window.addEventListener(

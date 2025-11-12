@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Browse every Hogwarts house with founders, traits, and lore-rich summaries."
+    />
+    <title>Hogwarts Houses</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Inter:wght@400;500;600;700&display=swap"
+      onload="this.rel='stylesheet'"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Inter:wght@400;500;600;700&display=swap"
+      />
+    </noscript>
+    <link rel="stylesheet" href="assets/css/styles.min.css" />
+  </head>
+  <body data-page="houses">
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <div class="container nav-container">
+        <a class="brand" href="index.html">Hogwarts: Houses &amp; Wizards</a>
+        <button
+          class="nav-toggle"
+          type="button"
+          aria-controls="primary-navigation"
+          aria-expanded="false"
+        >
+          <span class="sr-only">Toggle navigation</span>
+          <span aria-hidden="true" class="nav-toggle-bar"></span>
+          <span aria-hidden="true" class="nav-toggle-bar"></span>
+          <span aria-hidden="true" class="nav-toggle-bar"></span>
+        </button>
+        <nav class="primary-nav" id="primary-navigation">
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li>
+              <a href="houses.html" class="is-active" aria-current="page"
+                >Houses</a
+              >
+            </li>
+            <li><a href="wizards.html">Wizards</a></li>
+            <li><a href="timeline.html">Timeline</a></li>
+            <li><a href="about.html">About</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+    <main id="main" class="page">
+      <section class="page-header">
+        <div class="container">
+          <p class="eyebrow">House Directory</p>
+          <h1>Discover the Hogwarts Houses</h1>
+          <p class="page-subtitle">
+            Filter by traits and search by name to find the house that best fits
+            your magical spirit.
+          </p>
+        </div>
+      </section>
+      <section class="filters" aria-labelledby="house-filters-heading">
+        <div class="container">
+          <div class="filters-header">
+            <h2 id="house-filters-heading">Refine your search</h2>
+            <p>Combine search and trait filters for precise results.</p>
+          </div>
+          <form class="filter-form" id="house-filters">
+            <label class="filter-field" for="house-search">
+              <span class="form-label">Search by name</span>
+              <input
+                type="search"
+                id="house-search"
+                name="house-search"
+                placeholder="Type a house name..."
+                autocomplete="off"
+              />
+            </label>
+            <fieldset class="filter-field trait-filter">
+              <legend>Filter by traits</legend>
+              <div class="checkbox-list" id="trait-options"></div>
+            </fieldset>
+          </form>
+        </div>
+      </section>
+      <section class="cards-section" aria-labelledby="houses-grid-heading">
+        <div class="container">
+          <h2 id="houses-grid-heading" class="sr-only">
+            Hogwarts houses list
+          </h2>
+          <div class="cards-grid" id="houses-grid" role="list"></div>
+          <p class="empty-state" id="houses-empty-state" hidden>
+            No houses match your filters. Try adjusting your search or trait
+            selection.
+          </p>
+        </div>
+      </section>
+    </main>
+    <footer class="site-footer">
+      <div class="container footer-content">
+        <div>
+          <p class="footer-brand">Hogwarts: Houses &amp; Wizards</p>
+          <p class="footer-copy">
+            Fan site for educational purposes. All rights belong to their
+            respective owners.
+          </p>
+        </div>
+        <div class="footer-social">
+          <p class="footer-heading">Connect</p>
+          <ul>
+            <li>
+              <a
+                href="https://www.linkedin.com/in/your-username/"
+                target="_blank"
+                rel="noopener"
+                >LinkedIn</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://github.com/your-username"
+                target="_blank"
+                rel="noopener"
+                >GitHub</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://www.instagram.com/your-username/"
+                target="_blank"
+                rel="noopener"
+                >Instagram</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+      <p class="footer-note">Built using AI prompts only — no manual edits.</p>
+    </footer>
+    <script src="assets/js/data.min.js" defer></script>
+    <script src="assets/js/main.min.js" defer></script>
+  </body>
+</html>

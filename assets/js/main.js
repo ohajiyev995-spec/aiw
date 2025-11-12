@@ -278,10 +278,9 @@
     }
   };
 
-  const handlePointerEnter = (event) => {
+  const handlePointerEnter = (card, event) => {
     if (!isPointerFine() || prefersReducedMotion()) return;
     if (event.pointerType && event.pointerType === "touch") return;
-    const card = event.currentTarget;
     const state = getState(card);
     const timers = getCardTimers(card);
     window.clearTimeout(timers.close);
@@ -295,9 +294,8 @@
     }, 180);
   };
 
-  const handlePointerLeave = (event) => {
+  const handlePointerLeave = (card, event) => {
     if (!isPointerFine() || prefersReducedMotion()) return;
-    const card = event.currentTarget;
     const state = getState(card);
     const related = event.relatedTarget;
     if (related && card.contains(related)) {
@@ -401,16 +399,35 @@
     details.style.maxHeight = "";
     details.style.opacity = "";
 
-    card.addEventListener("pointerenter", handlePointerEnter);
-    card.addEventListener("pointerleave", handlePointerLeave);
     toggle.addEventListener("click", handleToggleClick);
     card.addEventListener("keydown", handleCardKeydown);
     card.addEventListener("focusin", handleFocusIn);
     card.addEventListener("focusout", handleFocusOut);
   };
 
+  const ensureDelegatedHover = (root) => {
+    if (!root || root.dataset.cardDelegation === "true") return;
+
+    const onPointerEnter = (event) => {
+      const card = event.target.closest(".card");
+      if (!card || !root.contains(card)) return;
+      handlePointerEnter(card, event);
+    };
+
+    const onPointerLeave = (event) => {
+      const card = event.target.closest(".card");
+      if (!card || !root.contains(card)) return;
+      handlePointerLeave(card, event);
+    };
+
+    root.addEventListener("pointerenter", onPointerEnter, true);
+    root.addEventListener("pointerleave", onPointerLeave, true);
+    root.dataset.cardDelegation = "true";
+  };
+
   const initializeCards = (root) => {
     if (!root) return;
+    ensureDelegatedHover(root);
     if (desktopOpenCard && !document.body.contains(desktopOpenCard)) {
       desktopOpenCard = null;
     }

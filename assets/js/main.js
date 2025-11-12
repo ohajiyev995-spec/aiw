@@ -105,10 +105,10 @@
 
     const getDetailsButton = (card) =>
       card ? card.querySelector('[data-action="details"]') : null;
-
+    const getHideButton = (card) =>
+      card ? card.querySelector('[data-action="hide"]') : null;
     const getDetailsRegion = (card) =>
       card ? card.querySelector(".card__details") : null;
-
     const findCardGrid = (card) =>
       card ? card.closest(".grid, .cards") : null;
 
@@ -178,11 +178,15 @@
 
     const resetCardState = (card) => {
       if (!card) return;
-      const button = getDetailsButton(card);
+      const showButton = getDetailsButton(card);
+      const hideButton = getHideButton(card);
       const details = getDetailsRegion(card);
       card.classList.remove("is-open");
-      if (button) {
-        button.setAttribute("aria-expanded", "false");
+      if (showButton) {
+        showButton.setAttribute("aria-expanded", "false");
+      }
+      if (hideButton) {
+        hideButton.setAttribute("aria-expanded", "false");
       }
       if (details) {
         details.setAttribute("aria-hidden", "true");
@@ -195,25 +199,38 @@
 
     const prepareCard = (card) => {
       if (!card) return;
-      const button = getDetailsButton(card);
+      const showButton = getDetailsButton(card);
+      const hideButton = getHideButton(card);
       const details = getDetailsRegion(card);
-      if (!button || !details) return;
+      if (!showButton || !details) return;
 
       if (!details.id) {
         details.id = generateDetailsId();
       }
-      button.dataset.action = "details";
-      button.setAttribute("type", "button");
-      button.setAttribute("aria-controls", details.id);
-      if (!button.id) {
-        button.id = `${details.id}-toggle`;
+      showButton.dataset.action = "details";
+      showButton.classList.add("show-btn");
+      showButton.setAttribute("type", "button");
+      showButton.setAttribute("aria-controls", details.id);
+      if (!showButton.id) {
+        showButton.id = `${details.id}-toggle`;
       }
-      if (!button.hasAttribute("aria-expanded")) {
-        button.setAttribute("aria-expanded", "false");
+      if (!showButton.hasAttribute("aria-expanded")) {
+        showButton.setAttribute("aria-expanded", "false");
+      }
+
+      if (hideButton) {
+        hideButton.dataset.action = "hide";
+        hideButton.classList.add("hide-btn");
+        hideButton.setAttribute("type", "button");
+        hideButton.setAttribute("aria-controls", details.id);
+        if (!hideButton.id) {
+          hideButton.id = `${details.id}-hide`;
+        }
+        hideButton.setAttribute("aria-expanded", "false");
       }
 
       details.setAttribute("role", "region");
-      details.setAttribute("aria-labelledby", button.id);
+      details.setAttribute("aria-labelledby", showButton.id);
       details.setAttribute("tabindex", "-1");
       if (!details.hasAttribute("aria-hidden")) {
         details.setAttribute("aria-hidden", "true");
@@ -233,10 +250,14 @@
     const closeCard = (card, { focusButton = false } = {}) => {
       if (!card || !card.classList.contains("is-open")) return;
       const button = getDetailsButton(card);
+      const hideButton = getHideButton(card);
       const details = getDetailsRegion(card);
       if (!button || !details) return;
 
       button.setAttribute("aria-expanded", "false");
+      if (hideButton) {
+        hideButton.setAttribute("aria-expanded", "false");
+      }
       details.setAttribute("aria-hidden", "true");
 
       if (!details.hidden) {
@@ -259,6 +280,7 @@
       if (!card) return;
       prepareCard(card);
       const button = getDetailsButton(card);
+      const hideButton = getHideButton(card);
       const details = getDetailsRegion(card);
       if (!button || !details) return;
 
@@ -274,6 +296,9 @@
       if (!card.classList.contains("is-open")) {
         card.classList.add("is-open");
         button.setAttribute("aria-expanded", "true");
+        if (hideButton) {
+          hideButton.setAttribute("aria-expanded", "true");
+        }
         details.setAttribute("aria-hidden", "false");
         details.hidden = false;
         animateOpen(details);
@@ -286,23 +311,24 @@
       }
     };
 
-    const toggleCard = (card) => {
-      if (!card) return;
-      if (card.classList.contains("is-open")) {
-        closeCard(card);
-      } else {
-        openCard(card, { focusDetails: true });
-      }
-    };
-
     const createGridClickHandler = (grid) => (event) => {
-      const button = event.target.closest('[data-action="details"]');
+      const button = event.target.closest("[data-action]");
       if (!button || !grid.contains(button)) return;
       const card = button.closest(".card");
       if (!card) return;
-      event.preventDefault();
-      prepareCard(card);
-      toggleCard(card);
+      const action = button.dataset.action;
+      if (action === "details") {
+        event.preventDefault();
+        prepareCard(card);
+        if (card.classList.contains("is-open")) {
+          closeCard(card, { focusButton: false });
+        } else {
+          openCard(card, { focusDetails: true });
+        }
+      } else if (action === "hide") {
+        event.preventDefault();
+        closeCard(card, { focusButton: true });
+      }
     };
 
     const createGridKeydownHandler = (grid) => (event) => {
@@ -368,17 +394,26 @@
         <h2 class="card__title">${house.name}</h2>
       </div>
       <p class="card__summary">${house.summary}</p>
-      <div class="card__footer">
-        <button
-          class="card__toggle"
-          type="button"
-          aria-expanded="false"
-          aria-controls="${detailsId}"
-          data-action="details"
-        >
-          Details <span class="card__toggle-icon" aria-hidden="true">▾</span>
-        </button>
-      </div>
+        <div class="card__footer">
+          <button
+            class="card__toggle show-btn"
+            type="button"
+            aria-expanded="false"
+            aria-controls="${detailsId}"
+            data-action="details"
+          >
+            Show details <span class="card__toggle-icon" aria-hidden="true">▾</span>
+          </button>
+          <button
+            class="card__toggle hide-btn"
+            type="button"
+            aria-expanded="false"
+            aria-controls="${detailsId}"
+            data-action="hide"
+          >
+            Hide details <span class="card__toggle-icon" aria-hidden="true">▾</span>
+          </button>
+        </div>
     </div>
       <div class="card__details" id="${detailsId}" hidden>
       <dl class="card__meta card__meta--inline">
@@ -450,17 +485,26 @@
         <span class="badge badge--outline" data-house="${wizard.house}">${house.name}</span>
       </div>
       <p class="card__summary">${wizard.summary}</p>
-      <div class="card__footer">
-        <button
-          class="card__toggle"
-          type="button"
-          aria-expanded="false"
-          aria-controls="${detailsId}"
-          data-action="details"
-        >
-          Details <span class="card__toggle-icon" aria-hidden="true">▾</span>
-        </button>
-      </div>
+        <div class="card__footer">
+          <button
+            class="card__toggle show-btn"
+            type="button"
+            aria-expanded="false"
+            aria-controls="${detailsId}"
+            data-action="details"
+          >
+            Show details <span class="card__toggle-icon" aria-hidden="true">▾</span>
+          </button>
+          <button
+            class="card__toggle hide-btn"
+            type="button"
+            aria-expanded="false"
+            aria-controls="${detailsId}"
+            data-action="hide"
+          >
+            Hide details <span class="card__toggle-icon" aria-hidden="true">▾</span>
+          </button>
+        </div>
     </div>
       <div class="card__details" id="${detailsId}" hidden>
       <dl class="card__meta card__meta--inline">
@@ -777,17 +821,26 @@
           }
         </div>
         <p class="card__summary">${spell.summary}</p>
-        <div class="card__footer">
+          <div class="card__footer">
             <button
-              class="card__toggle"
+              class="card__toggle show-btn"
               type="button"
               aria-expanded="false"
               aria-controls="${detailsId}"
               data-action="details"
             >
-            Details <span class="card__toggle-icon" aria-hidden="true">▾</span>
-          </button>
-        </div>
+              Show details <span class="card__toggle-icon" aria-hidden="true">▾</span>
+            </button>
+            <button
+              class="card__toggle hide-btn"
+              type="button"
+              aria-expanded="false"
+              aria-controls="${detailsId}"
+              data-action="hide"
+            >
+              Hide details <span class="card__toggle-icon" aria-hidden="true">▾</span>
+            </button>
+          </div>
       </div>
       <div class="card__details" id="${detailsId}" hidden>
         <p class="card__effect"><strong>Effect:</strong> ${spell.effect}</p>

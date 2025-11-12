@@ -416,6 +416,7 @@ h4 {
   margin-top: 1.25rem;
   display: flex;
   justify-content: flex-start;
+  gap: 0.75rem;
 }
 
 .card__toggle {
@@ -432,6 +433,18 @@ h4 {
   text-transform: uppercase;
   transition: background var(--transition-fast), border var(--transition-fast),
     color var(--transition-fast), transform var(--transition-fast);
+}
+
+.card__toggle.hide-btn {
+  display: none;
+}
+
+.card.is-open .card__toggle.hide-btn {
+  display: inline-flex;
+}
+
+.card.is-open .card__toggle.show-btn {
+  display: none;
 }
 
 .card__toggle:hover,

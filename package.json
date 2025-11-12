@@ -1,0 +1,23 @@
+{
+  "name": "workspace",
+  "version": "1.0.0",
+  "description": "- Dark-theme, multi-page Hogwarts fan site built entirely with AI-authored HTML, CSS, and JavaScript. - Features searchable house and wizard directories, spoiler-aware summaries, and a combined historical timeline. - Optimized for desktop and mobile with responsive layouts, accessible focus states, and lazy-loaded WebP imagery.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ohajiyev995-spec/aiw.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ohajiyev995-spec/aiw/issues"
+  },
+  "homepage": "https://github.com/ohajiyev995-spec/aiw#readme",
+  "dependencies": {
+    "puppeteer": "^21.11.0"
+  }
+}

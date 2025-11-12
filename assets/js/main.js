@@ -92,40 +92,25 @@
     select.appendChild(fragment);
   };
 
-    const pointerFineQuery = window.matchMedia("(pointer: fine)");
     const prefersReducedMotionQuery = window.matchMedia(
       "(prefers-reduced-motion: reduce)"
     );
-    const isPointerFine = () => pointerFineQuery.matches;
     const prefersReducedMotion = () => prefersReducedMotionQuery.matches;
-    let desktopOpenCard = null;
-  const hoverRoots = new Set();
 
-  const focusableSelectors =
-    'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+    const focusableSelectors =
+      'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
-  const cardState = new WeakMap();
+    const generateDetailsId = () =>
+      `card-details-${Math.random().toString(36).slice(2, 9)}`;
 
-  const getState = (card) => {
-    if (!cardState.has(card)) {
-      cardState.set(card, {
-        timers: { open: null, close: null },
-        explicit: false,
-        hoverOpen: false,
-      });
-    }
-    return cardState.get(card);
-  };
+    const getDetailsButton = (card) =>
+      card ? card.querySelector('[data-action="details"]') : null;
 
-  const getCardTimers = (card) => getState(card).timers;
+    const getDetailsRegion = (card) =>
+      card ? card.querySelector(".card__details") : null;
 
-  const clearCardTimers = (card) => {
-    const timers = getCardTimers(card);
-    if (timers.open) window.clearTimeout(timers.open);
-    if (timers.close) window.clearTimeout(timers.close);
-    timers.open = null;
-    timers.close = null;
-  };
+    const findCardGrid = (card) =>
+      card ? card.closest(".grid, .cards") : null;
 
   const focusFirstElement = (container) => {
     const focusable = container.querySelectorAll(focusableSelectors);
@@ -191,283 +176,183 @@
     details.addEventListener("transitionend", handle);
   };
 
-  const openCard = (card, { mode = "hover", focusPanel = false } = {}) => {
-    if (!card) return;
-    const toggle = card.querySelector("[data-card-toggle]");
-    const details = card.querySelector("[data-card-details]");
-    if (!toggle || !details) return;
+    const resetCardState = (card) => {
+      if (!card) return;
+      const button = getDetailsButton(card);
+      const details = getDetailsRegion(card);
+      card.classList.remove("is-open");
+      if (button) {
+        button.setAttribute("aria-expanded", "false");
+      }
+      if (details) {
+        details.setAttribute("aria-hidden", "true");
+        details.dataset.open = "false";
+        details.hidden = true;
+        details.style.maxHeight = "";
+        details.style.opacity = "";
+      }
+    };
 
-    const state = getState(card);
-    clearCardTimers(card);
+    const prepareCard = (card) => {
+      if (!card) return;
+      const button = getDetailsButton(card);
+      const details = getDetailsRegion(card);
+      if (!button || !details) return;
 
-    const wasOpen = card.classList.contains("is-open");
+      if (!details.id) {
+        details.id = generateDetailsId();
+      }
+      button.dataset.action = "details";
+      button.setAttribute("type", "button");
+      button.setAttribute("aria-controls", details.id);
+      if (!button.id) {
+        button.id = `${details.id}-toggle`;
+      }
+      if (!button.hasAttribute("aria-expanded")) {
+        button.setAttribute("aria-expanded", "false");
+      }
 
-    if (mode === "explicit") {
-      state.explicit = true;
-      state.hoverOpen = false;
-    } else {
-      state.hoverOpen = true;
-    }
+      details.setAttribute("role", "region");
+      details.setAttribute("aria-labelledby", button.id);
+      details.setAttribute("tabindex", "-1");
+      if (!details.hasAttribute("aria-hidden")) {
+        details.setAttribute("aria-hidden", "true");
+      }
+      details.dataset.open = details.dataset.open || "false";
+    };
 
-    if (isPointerFine()) {
-      if (desktopOpenCard && desktopOpenCard !== card) {
-        const previousState = getState(desktopOpenCard);
-        closeCard(desktopOpenCard, {
-          source: previousState.explicit ? "explicit" : "hover",
+    const prepareCardsInGrid = (grid) => {
+      if (!grid) return;
+      const cards = $$(".card", grid);
+      cards.forEach((card) => {
+         prepareCard(card);
+         resetCardState(card);
+      });
+    };
+
+    const closeCard = (card, { focusButton = false } = {}) => {
+      if (!card || !card.classList.contains("is-open")) return;
+      const button = getDetailsButton(card);
+      const details = getDetailsRegion(card);
+      if (!button || !details) return;
+
+      button.setAttribute("aria-expanded", "false");
+      details.setAttribute("aria-hidden", "true");
+
+      if (!details.hidden) {
+        animateClose(details);
+      } else {
+        details.hidden = true;
+        details.dataset.open = "false";
+      }
+
+      card.classList.remove("is-open");
+
+      if (focusButton) {
+        requestAnimationFrame(() => {
+          button.focus({ preventScroll: true });
         });
       }
-      desktopOpenCard = card;
-    }
-
-    toggle.setAttribute("aria-expanded", "true");
-    details.setAttribute("aria-hidden", "false");
-
-    if (!wasOpen || details.hidden) {
-      animateOpen(details);
-    }
-
-    card.classList.add("is-open");
-
-    if (mode === "explicit" && focusPanel) {
-      requestAnimationFrame(() => {
-        focusFirstElement(details);
-      });
-    }
-  };
-
-  const closeCard = (
-    card,
-    { focusButton = false, source = "hover" } = {}
-  ) => {
-    if (!card) return;
-    const toggle = card.querySelector("[data-card-toggle]");
-    const details = card.querySelector("[data-card-details]");
-    if (!toggle || !details) return;
-
-    const state = getState(card);
-    clearCardTimers(card);
-
-    if (source === "explicit") {
-      state.explicit = false;
-      state.hoverOpen = false;
-    } else {
-      state.hoverOpen = false;
-      if (state.explicit) {
-        return;
-      }
-    }
-
-    toggle.setAttribute("aria-expanded", "false");
-    details.setAttribute("aria-hidden", "true");
-
-    if (!details.hidden) {
-      animateClose(details);
-    } else {
-      details.hidden = true;
-      details.dataset.open = "false";
-    }
-
-    card.classList.remove("is-open");
-    if (desktopOpenCard === card) {
-      desktopOpenCard = null;
-    }
-
-    if (focusButton) {
-      requestAnimationFrame(() => {
-        toggle.focus({ preventScroll: true });
-      });
-    }
-  };
-
-  const handlePointerEnter = (card, event) => {
-    if (!isPointerFine() || prefersReducedMotion()) return;
-    if (event.pointerType && event.pointerType === "touch") return;
-    const state = getState(card);
-    const timers = getCardTimers(card);
-    window.clearTimeout(timers.close);
-    timers.close = null;
-    if (state.explicit) return;
-    window.clearTimeout(timers.open);
-    timers.open = window.setTimeout(() => {
-      if (!getState(card).explicit) {
-        openCard(card, { mode: "hover" });
-      }
-    }, 180);
-  };
-
-  const handlePointerLeave = (card, event) => {
-    if (!isPointerFine() || prefersReducedMotion()) return;
-    const state = getState(card);
-    const related = event.relatedTarget;
-    if (related && card.contains(related)) {
-      return;
-    }
-    const timers = getCardTimers(card);
-    window.clearTimeout(timers.open);
-    timers.open = null;
-    if (state.explicit) return;
-    if (!state.hoverOpen && !card.classList.contains("is-open")) return;
-    window.clearTimeout(timers.close);
-    timers.close = window.setTimeout(() => {
-      const latestState = getState(card);
-      if (!latestState.explicit) {
-        closeCard(card, { source: "hover" });
-      }
-    }, 240);
-  };
-
-  pointerFineQuery.addEventListener("change", () => {
-    if (!isPointerFine() && desktopOpenCard) {
-      const previous = desktopOpenCard;
-      desktopOpenCard = null;
-      const state = getState(previous);
-      if (!state.explicit) {
-        closeCard(previous, { source: "hover" });
-      }
-    }
-    refreshHoverDelegation();
-  });
-
-  const handleToggleClick = (event) => {
-    event.preventDefault();
-    const button = event.currentTarget;
-    const card = button.closest(".card");
-    if (!card) return;
-
-    const state = getState(card);
-    const isOpen = card.classList.contains("is-open");
-
-    if (!isOpen) {
-      openCard(card, { mode: "explicit", focusPanel: true });
-    } else if (state.explicit) {
-      closeCard(card, { focusButton: true, source: "explicit" });
-    } else {
-      openCard(card, { mode: "explicit", focusPanel: true });
-    }
-  };
-
-  const handleCardKeydown = (event) => {
-    if (event.key !== "Escape") return;
-    const card = event.currentTarget;
-    if (!card.classList.contains("is-open")) return;
-    const state = getState(card);
-    closeCard(card, {
-      focusButton: true,
-      source: state.explicit ? "explicit" : "hover",
-    });
-  };
-
-  const handleFocusIn = (event) => {
-    const card = event.currentTarget;
-    clearCardTimers(card);
-  };
-
-  const handleFocusOut = (event) => {
-    const card = event.currentTarget;
-    const next = event.relatedTarget;
-    if (next && card.contains(next)) return;
-    const state = getState(card);
-    if (state.explicit) return;
-    closeCard(card, { source: "hover" });
-  };
-
-  const initializeCard = (card) => {
-    if (!card || card.dataset.cardReady === "true") return;
-    const toggle = card.querySelector("[data-card-toggle]");
-    const details = card.querySelector("[data-card-details]");
-    if (!toggle || !details) return;
-
-    card.dataset.cardReady = "true";
-    const state = getState(card);
-    state.explicit = false;
-    state.hoverOpen = false;
-    clearCardTimers(card);
-    card.classList.remove("is-open");
-
-    if (!details.id) {
-      const generatedId = `card-details-${Math.random().toString(36).slice(2, 9)}`;
-      details.id = generatedId;
-    }
-    toggle.setAttribute("aria-controls", details.id);
-    if (!toggle.id) {
-      toggle.id = `${details.id}-toggle`;
-    }
-
-    toggle.setAttribute("aria-expanded", "false");
-    details.setAttribute("aria-hidden", "true");
-    details.setAttribute("role", "region");
-    details.setAttribute("aria-labelledby", toggle.id);
-    details.setAttribute("tabindex", "-1");
-    details.dataset.open = "false";
-    details.hidden = true;
-    details.style.maxHeight = "";
-    details.style.opacity = "";
-
-    toggle.addEventListener("click", handleToggleClick);
-    card.addEventListener("keydown", handleCardKeydown);
-    card.addEventListener("focusin", handleFocusIn);
-    card.addEventListener("focusout", handleFocusOut);
-  };
-
-  const attachHoverDelegation = (root) => {
-    if (!root || root._cardHoverHandlers) return;
-    const onPointerEnter = (event) => {
-      const card = event.target.closest(".card");
-      if (!card || !root.contains(card)) return;
-      handlePointerEnter(card, event);
     };
-    const onPointerLeave = (event) => {
-      const card = event.target.closest(".card");
-      if (!card || !root.contains(card)) return;
-      handlePointerLeave(card, event);
-    };
-    root.addEventListener("pointerenter", onPointerEnter, true);
-    root.addEventListener("pointerleave", onPointerLeave, true);
-    root._cardHoverHandlers = { onPointerEnter, onPointerLeave };
-  };
 
-  const detachHoverDelegation = (root) => {
-    if (!root || !root._cardHoverHandlers) return;
-    const { onPointerEnter, onPointerLeave } = root._cardHoverHandlers;
-    root.removeEventListener("pointerenter", onPointerEnter, true);
-    root.removeEventListener("pointerleave", onPointerLeave, true);
-    root._cardHoverHandlers = null;
-  };
+    const openCard = (card, { focusDetails = false } = {}) => {
+      if (!card) return;
+      prepareCard(card);
+      const button = getDetailsButton(card);
+      const details = getDetailsRegion(card);
+      if (!button || !details) return;
 
-  const refreshHoverDelegation = () => {
-    hoverRoots.forEach((root) => {
-      if (!root || !root.isConnected) {
-        detachHoverDelegation(root);
-        hoverRoots.delete(root);
-        return;
+      const grid = findCardGrid(card);
+      if (grid) {
+        grid.querySelectorAll(".card.is-open").forEach((other) => {
+          if (other !== card) {
+            closeCard(other);
+          }
+        });
       }
-      if (isPointerFine()) {
-        attachHoverDelegation(root);
+
+      if (!card.classList.contains("is-open")) {
+        card.classList.add("is-open");
+        button.setAttribute("aria-expanded", "true");
+        details.setAttribute("aria-hidden", "false");
+        details.hidden = false;
+        animateOpen(details);
+      }
+
+      if (focusDetails) {
+        requestAnimationFrame(() => {
+          focusFirstElement(details);
+        });
+      }
+    };
+
+    const toggleCard = (card) => {
+      if (!card) return;
+      if (card.classList.contains("is-open")) {
+        closeCard(card);
       } else {
-        detachHoverDelegation(root);
+        openCard(card, { focusDetails: true });
       }
-    });
-  };
+    };
 
-  const ensureDelegatedHover = (root) => {
-    if (!root) return;
-    hoverRoots.add(root);
-    if (isPointerFine()) {
-      attachHoverDelegation(root);
-    } else {
-      detachHoverDelegation(root);
-    }
-  };
+    const createGridClickHandler = (grid) => (event) => {
+      const button = event.target.closest('[data-action="details"]');
+      if (!button || !grid.contains(button)) return;
+      const card = button.closest(".card");
+      if (!card) return;
+      event.preventDefault();
+      prepareCard(card);
+      toggleCard(card);
+    };
 
-  const initializeCards = (root) => {
-    if (!root) return;
-    ensureDelegatedHover(root);
-    if (desktopOpenCard && !document.body.contains(desktopOpenCard)) {
-      desktopOpenCard = null;
-    }
-    const cards = $$(".card", root);
-    cards.forEach((card) => initializeCard(card));
-  };
+    const createGridKeydownHandler = (grid) => (event) => {
+      if (event.key !== "Escape") return;
+      const detailsRegion = event.target.closest(".card__details");
+      if (!detailsRegion || !grid.contains(detailsRegion)) return;
+      const card = detailsRegion.closest(".card");
+      if (!card || !card.classList.contains("is-open")) return;
+      event.preventDefault();
+      closeCard(card, { focusButton: true });
+    };
+
+    const setupCardGrid = (grid) => {
+      if (!grid) return;
+      prepareCardsInGrid(grid);
+
+      if (grid.dataset.detailsReady === "true") {
+        return;
+      }
+
+      const handleClick = createGridClickHandler(grid);
+      const handleKeydown = createGridKeydownHandler(grid);
+
+      grid.addEventListener("click", handleClick);
+      grid.addEventListener("keydown", handleKeydown, true);
+
+      grid.dataset.detailsReady = "true";
+    };
+
+    const initializeCards = (root) => {
+      if (!root) return;
+      setupCardGrid(root);
+    };
+
+    const openCardFromHash = () => {
+      const hash = window.location.hash.slice(1);
+      if (!hash) return;
+      const target = document.getElementById(hash);
+      if (!target) return;
+      const card = target.classList.contains("card")
+        ? target
+        : target.closest(".card");
+      if (!card) return;
+      const grid = findCardGrid(card);
+      if (grid) {
+        setupCardGrid(grid);
+      }
+      openCard(card, { focusDetails: false });
+      card.scrollIntoView({ behavior: "smooth", block: "start" });
+    };
 
   const renderHouseCard = (house) => {
     const article = document.createElement("article");
@@ -489,13 +374,13 @@
           type="button"
           aria-expanded="false"
           aria-controls="${detailsId}"
-          data-card-toggle
+          data-action="details"
         >
           Details <span class="card__toggle-icon" aria-hidden="true">▾</span>
         </button>
       </div>
     </div>
-    <div class="card__details" id="${detailsId}" data-card-details hidden>
+      <div class="card__details" id="${detailsId}" hidden>
       <dl class="card__meta card__meta--inline">
         <div>
           <dt>Founder</dt>
@@ -571,13 +456,13 @@
           type="button"
           aria-expanded="false"
           aria-controls="${detailsId}"
-          data-card-toggle
+          data-action="details"
         >
           Details <span class="card__toggle-icon" aria-hidden="true">▾</span>
         </button>
       </div>
     </div>
-    <div class="card__details" id="${detailsId}" data-card-details hidden>
+      <div class="card__details" id="${detailsId}" hidden>
       <dl class="card__meta card__meta--inline">
         <div>
           <dt>Aliases</dt>
@@ -893,18 +778,18 @@
         </div>
         <p class="card__summary">${spell.summary}</p>
         <div class="card__footer">
-          <button
-            class="card__toggle"
-            type="button"
-            aria-expanded="false"
-            aria-controls="${detailsId}"
-            data-card-toggle
-          >
+            <button
+              class="card__toggle"
+              type="button"
+              aria-expanded="false"
+              aria-controls="${detailsId}"
+              data-action="details"
+            >
             Details <span class="card__toggle-icon" aria-hidden="true">▾</span>
           </button>
         </div>
       </div>
-      <div class="card__details" id="${detailsId}" data-card-details hidden>
+      <div class="card__details" id="${detailsId}" hidden>
         <p class="card__effect"><strong>Effect:</strong> ${spell.effect}</p>
         <dl class="card__meta card__meta--inline">
           <div>
@@ -1124,7 +1009,9 @@
   initFeaturedSection();
   initHousesPage();
   initWizardsPage();
-  initSpellsPage();
-  initTimelinePage();
-  activateScrollEffects();
+    initSpellsPage();
+    initTimelinePage();
+    openCardFromHash();
+    window.addEventListener("hashchange", openCardFromHash);
+    activateScrollEffects();
 })();
